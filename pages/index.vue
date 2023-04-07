@@ -1,5 +1,3 @@
-<chmod u+x nvim.appimage && ./nvim.appimagtemplate>
-  <div>
-    <NuxtWelcome />
-  </div>
+<template>
+  <div>Hello</div>
 </template>
