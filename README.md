@@ -24,12 +24,12 @@ MentorMe is built using the following technologies:
 
 ## TODO
 
-[] User registration and verification
-[] Mentor registration and verification
-[] Mentor matching based on user criteria
-[] Direct messaging between users and mentors
-[] Schedule mentoring sessions with mentors
-[] Payment processing for mentorship services
+- [ ] User registration and verification
+- [ ] Mentor registration and verification
+- [ ] Mentor matching based on user criteria
+- [ ] Direct messaging between users and mentors
+- [ ] Schedule mentoring sessions with mentors
+- [ ] Payment processing for mentorship services
 
 ## License
 
