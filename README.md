@@ -1,42 +1,36 @@
-# Nuxt 3 Minimal Starter
+# MentorMe
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+MentorMe is a career mentorship platform that connects aspiring professionals with experienced mentors in their desired field. Our platform helps users find the right mentor to guide them on their career journey, providing support, advice, and valuable insights along the way.
 
-## Setup
+## Features
 
-Make sure to install the dependencies:
+Some of the features of MentorMe include:
 
-```bash
-# yarn
-yarn install
+- User registration and verification
+- Mentor registration and verification
+- Mentor matching based on user criteria
+- Direct messaging between users and mentors
+- Schedule mentoring sessions with mentors
+- Payment processing for mentorship services
 
-# npm
-npm install
+## Technologies Used
 
-# pnpm
-pnpm install
-```
+MentorMe is built using the following technologies:
 
-## Development Server
+- [Nuxt](https://nuxtjs.org/) for server-side rendering and frontend development
+- [Tailwind CSS](https://tailwindcss.com/) for styling
+- [Supabase](https://supabase.io/) for backend and database management
+- [Prisma](https://www.prisma.io/) for ORM and database modeling
 
-Start the development server on `http://localhost:3000`
+## TODO
 
-```bash
-npm run dev
-```
+[] User registration and verification
+[] Mentor registration and verification
+[] Mentor matching based on user criteria
+[] Direct messaging between users and mentors
+[] Schedule mentoring sessions with mentors
+[] Payment processing for mentorship services
 
-## Production
+## License
 
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+MentorMe is released under the MIT License. See the LICENSE file for details.
