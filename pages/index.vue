@@ -1,5 +1,7 @@
 <template>
-  <div>Layout test</div>
+  <div>
+    <Hero />
+  </div>
 </template>
 
 <script lang="ts" setup>
