@@ -5,7 +5,6 @@ defineProps({
 
 const links = computed(() => [
   { text: "Become a mentor", url: "/become-a-mentor" },
-  { text: "Hire from us", url: "/hire-from-us" },
   { text: "Live sessions", url: "/live-sessions" },
   { text: "Find a mentor", url: "/find-a-mentor" },
 ]);
