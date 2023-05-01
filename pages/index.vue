@@ -2,6 +2,7 @@
   <div>
     <Hero />
     <Jomb />
+    <Features />
   </div>
 </template>
 

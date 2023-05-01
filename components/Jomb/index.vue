@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="mx-auto max-w-5xl items-center px-3 py-8 md:px-0 lg:py-16">
+    <div class="mx-auto max-w-5xl px-3 py-8 lg:px-0 lg:py-16">
       <div
         class="mb-8 rounded-lg border border-gray-200 bg-gray-50 p-8 dark:border-gray-700 dark:bg-gray-800 md:p-12"
       >
@@ -64,34 +64,35 @@
             class="mb-2 inline-flex items-center rounded-md bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-gray-700 dark:text-green-400"
           >
             <svg
-              class="mr-1 h-3 w-3"
-              fill="currentColor"
-              viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mr-1 h-3 w-3"
             >
               <path
-                clip-rule="evenodd"
-                fill-rule="evenodd"
-                d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z"
-              ></path>
+                stroke-linecap="round"
+                d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"
+              />
             </svg>
-            Design
+            Live Session
           </a>
           <h2
             class="mb-2 text-2xl font-extrabold text-gray-900 dark:text-white"
           >
-            Start with Flowbite Design System
+            Join exclusive sessions hosted by industry elites
           </h2>
           <p
             class="mb-4 max-w-2xl text-lg font-normal text-gray-500 dark:text-gray-400"
           >
-            Static websites are now used to bootstrap lots of websites and are
-            becoming the basis for a variety of tools that even influence both
-            web designers and developers.
+            Experience unparalleled learning opportunities with our exclusive
+            sessions hosted by industry elites. Gain unique insights into the
+            latest trends and innovations directly from the experts who are
+            shaping the future of their respective fields.
           </p>
-          <a
-            href="#"
+          <NuxtLink
+            to="/live-sessions"
             class="inline-flex items-center text-lg font-medium text-blue-500 hover:underline dark:text-blue-600"
             >Read more
             <svg
@@ -109,7 +110,7 @@
                 d="M17 8l4 4m0 0l-4 4m4-4H3"
               ></path>
             </svg>
-          </a>
+          </NuxtLink>
         </div>
         <div
           class="rounded-lg border border-gray-200 bg-gray-50 p-8 dark:border-gray-700 dark:bg-gray-800 md:p-12"
@@ -119,34 +120,37 @@
             class="mb-2 inline-flex items-center rounded-md bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-800 dark:bg-gray-700 dark:text-purple-400"
           >
             <svg
-              class="mr-1 h-3 w-3"
-              fill="currentColor"
-              viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="mr-1 h-3 w-3"
             >
               <path
-                clip-rule="evenodd"
-                fill-rule="evenodd"
-                d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z"
-              ></path>
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"
+              />
             </svg>
-            Code
+
+            Become a Mentor
           </a>
           <h2
             class="mb-2 text-2xl font-extrabold text-gray-900 dark:text-white"
           >
-            Best react libraries around the web
+            Be a catalyst for change help others achieve success
           </h2>
           <p
             class="mb-4 max-w-2xl text-lg font-normal text-gray-500 dark:text-gray-400"
           >
-            Static websites are now used to bootstrap lots of websites and are
-            becoming the basis for a variety of tools that even influence both
-            web designers and developers.
+            Are you a seasoned professional? there are countless ways to help
+            others achieve success. With our community of like-minded
+            individuals, you'll have access to a wealth of resources to help you
+            make a meaningful impact.
           </p>
-          <a
-            href="#"
+          <NuxtLink
+            to="/become-a-mentor"
             class="inline-flex items-center text-lg font-medium text-blue-500 hover:underline dark:text-blue-600"
             >Read more
             <svg
@@ -164,7 +168,7 @@
                 d="M17 8l4 4m0 0l-4 4m4-4H3"
               ></path>
             </svg>
-          </a>
+          </NuxtLink>
         </div>
       </div>
     </div>
