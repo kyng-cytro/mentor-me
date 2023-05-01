@@ -3,6 +3,7 @@
     <Hero />
     <Jomb />
     <Features />
+    <HowItWorks />
   </div>
 </template>
 
