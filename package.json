@@ -1,6 +1,9 @@
 {
   "name": "nuxt-app",
   "private": true,
+  "overrides": {
+    "vue": "latest"
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -19,8 +22,10 @@
   "dependencies": {
     "@nuxt/image-edge": "^1.0.0-28008586.381b906",
     "@nuxtjs/tailwindcss": "^6.6.5",
+    "@pinia/nuxt": "^0.4.9",
     "@vueuse/nuxt": "^9.13.0",
     "h3-zod": "^0.4.2",
+    "pinia": "^2.0.35",
     "zod": "^3.21.4"
   }
 }

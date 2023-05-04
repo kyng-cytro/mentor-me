@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="mx-auto max-w-5xl px-3 py-8 lg:px-0 lg:py-16">
+    <div class="mx-auto max-w-5xl px-3 py-8 lg:px-0 lg:pb-16">
       <div class="mb-8 px-2 lg:mb-16">
         <h2
           class="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white"
@@ -15,7 +15,7 @@
             <div class="flex">
               <div class="flex-shrink-0">
                 <div
-                  class="flex h-8 w-8 items-center justify-center rounded-md bg-blue-400 text-white"
+                  class="flex h-8 w-8 items-center justify-center rounded-md bg-blue-400 text-white dark:bg-blue-600"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +47,7 @@
             <div class="flex">
               <div class="flex-shrink-0">
                 <div
-                  class="flex h-8 w-8 items-center justify-center rounded-md bg-blue-400 text-white"
+                  class="flex h-8 w-8 items-center justify-center rounded-md bg-blue-400 text-white dark:bg-blue-600"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -79,7 +79,7 @@
             <div class="flex">
               <div class="flex-shrink-0">
                 <div
-                  class="flex h-8 w-8 items-center justify-center rounded-md bg-blue-400 text-white"
+                  class="flex h-8 w-8 items-center justify-center rounded-md bg-blue-400 text-white dark:bg-blue-600"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -114,6 +114,7 @@
               src="/images/mockup.png"
               alt="website-mockup"
               class="mx-auto h-[480px] rounded-lg"
+              placeholder
             />
           </div>
         </div>

@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="mx-auto max-w-5xl px-3 py-8 lg:px-0 lg:py-16">
+    <div class="mx-auto max-w-5xl px-3 py-8 lg:px-0 lg:pb-16">
       <div
         class="mb-8 rounded-lg border border-gray-200 bg-gray-50 p-8 dark:border-gray-700 dark:bg-gray-800 md:p-12"
       >

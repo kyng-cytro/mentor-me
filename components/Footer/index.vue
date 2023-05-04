@@ -10,14 +10,21 @@
           <h2 class="mb-6 text-sm font-semibold uppercase">For Businesses</h2>
           <ul class="font-medium text-gray-600 dark:text-gray-400">
             <li class="mb-4">
-              <a href="https://flowbite.com/" class="hover:underline"
-                >Hire from us</a
-              >
+              <a href="#" class="group transition duration-300">
+                Hire from us
+                <span
+                  class="block h-0.5 max-w-0 bg-gray-600 transition-all duration-500 group-hover:max-w-[40%] dark:bg-gray-400"
+                ></span>
+              </a>
             </li>
-            <li>
-              <a href="https://tailwindcss.com/" class="hover:underline"
-                >Train your staffs</a
-              >
+
+            <li class="mb-4">
+              <a href="#" class="group transition duration-300">
+                Train your staffs
+                <span
+                  class="block h-0.5 max-w-0 bg-gray-600 transition-all duration-500 group-hover:max-w-[50%] dark:bg-gray-400"
+                ></span>
+              </a>
             </li>
           </ul>
         </div>
@@ -29,16 +36,20 @@
           </h2>
           <ul class="font-medium text-gray-600 dark:text-gray-400">
             <li class="mb-4">
-              <a
-                href="https://github.com/themesberg/flowbite"
-                class="hover:underline"
-                >Github</a
-              >
+              <a href="#" class="group transition duration-300">
+                Github
+                <span
+                  class="block h-0.5 max-w-0 bg-gray-600 transition-all duration-500 group-hover:max-w-[30%] dark:bg-gray-400"
+                ></span>
+              </a>
             </li>
-            <li>
-              <a href="https://discord.gg/4eeurUVvTy" class="hover:underline"
-                >Discord</a
-              >
+            <li class="mb-4">
+              <a href="#" class="group transition duration-300">
+                Discord
+                <span
+                  class="block h-0.5 max-w-0 bg-gray-600 transition-all duration-500 group-hover:max-w-[30%] dark:bg-gray-400"
+                ></span>
+              </a>
             </li>
           </ul>
         </div>
@@ -50,10 +61,20 @@
           </h2>
           <ul class="font-medium text-gray-600 dark:text-gray-400">
             <li class="mb-4">
-              <a href="#" class="hover:underline">Privacy Policy</a>
+              <a href="#" class="group transition duration-300">
+                Privacy Policy
+                <span
+                  class="block h-0.5 max-w-0 bg-gray-600 transition-all duration-500 group-hover:max-w-[50%] dark:bg-gray-400"
+                ></span>
+              </a>
             </li>
-            <li>
-              <a href="#" class="hover:underline">Terms &amp; Conditions</a>
+            <li class="mb-4">
+              <a href="#" class="group transition duration-300">
+                Terms &amp; Conditions
+                <span
+                  class="block h-0.5 max-w-0 bg-gray-600 transition-all duration-500 group-hover:max-w-[60%] dark:bg-gray-400"
+                ></span>
+              </a>
             </li>
           </ul>
         </div>

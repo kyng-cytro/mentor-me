@@ -1,3 +1,14 @@
+<script setup lang="ts">
+import { useModalStore } from "~/stores/modalStore";
+
+const modalStore = useModalStore();
+
+const showLogin = () => {
+  modalStore.hide("NAVIGATION");
+  modalStore.show("LOGIN");
+};
+</script>
+
 <template>
   <section
     class="bg-gray-700 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/conference.jpg')] bg-center bg-no-repeat bg-blend-multiply"
@@ -18,7 +29,7 @@
       <div
         class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-x-4 sm:space-y-0"
       >
-        <ButtonsSlot>
+        <ButtonsSlot @click="showLogin">
           Get started
           <svg
             aria-hidden="true"

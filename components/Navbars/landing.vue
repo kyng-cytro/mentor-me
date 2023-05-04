@@ -1,13 +1,29 @@
 <script setup lang="ts">
-defineProps({
-  open: Boolean,
-});
+import { storeToRefs } from "pinia";
+import { useModalStore } from "~/stores/modalStore";
 
 const links = computed(() => [
   { text: "Become a mentor", url: "/become-a-mentor" },
   { text: "Live sessions", url: "/live-sessions" },
   { text: "Find a mentor", url: "/find-a-mentor" },
 ]);
+
+const modalStore = useModalStore();
+
+const { data } = storeToRefs(modalStore);
+
+const hideNav = () => {
+  modalStore.hide("NAVIGATION");
+};
+
+const showNav = () => {
+  modalStore.show("NAVIGATION");
+};
+
+const showLogin = () => {
+  hideNav();
+  modalStore.show("LOGIN");
+};
 </script>
 
 <style scoped>
@@ -75,7 +91,7 @@ const links = computed(() => [
     <div class="mx-auto flex max-w-5xl items-center justify-between">
       <div>
         <NuxtLink
-          @click="open ? $emit('toggle-nav') : null"
+          @click="hideNav"
           class="p-2 text-xl font-bold text-slate-800 dark:text-slate-300"
           to="/"
           >Mentor Me</NuxtLink
@@ -85,14 +101,18 @@ const links = computed(() => [
       <!-- Mobile Nav Toggle -->
       <div class="flex items-center gap-3 md:hidden">
         <div>
-          <ButtonsNormal text="Get Started" :secondary="true" />
+          <ButtonsNormal
+            @click="showLogin"
+            text="Get Started"
+            :secondary="true"
+          />
         </div>
 
         <Transition name="menu" mode="out-in">
           <button
-            @click="$emit('toggle-nav')"
+            @click="hideNav"
             class="rounded-md border border-slate-300 p-1.5 hover:bg-slate-300 focus:bg-slate-300 focus:outline-none dark:border-slate-600 dark:hover:bg-slate-600 dark:focus:bg-slate-600"
-            v-if="open"
+            v-if="data.NAVIGATION"
           >
             <svg
               fill="none"
@@ -111,7 +131,7 @@ const links = computed(() => [
             </svg>
           </button>
           <button
-            @click="$emit('toggle-nav')"
+            @click="showNav"
             class="rounded-md border border-slate-300 p-1.5 hover:bg-slate-300 focus:bg-slate-300 focus:outline-none dark:border-slate-600 dark:hover:bg-slate-600 dark:focus:bg-slate-600"
             v-else
           >
@@ -147,7 +167,11 @@ const links = computed(() => [
         </div>
         <!-- Get started Button -->
         <div>
-          <ButtonsNormal text="Get Started" :secondary="true" />
+          <ButtonsNormal
+            @click="showLogin"
+            text="Get Started"
+            :secondary="true"
+          />
         </div>
       </div>
     </div>
@@ -156,10 +180,10 @@ const links = computed(() => [
       <!-- Mobile Nav -->
       <div
         class="flex flex-col items-center gap-3 pb-2 pt-3 md:hidden"
-        v-show="open"
+        v-show="data.NAVIGATION"
       >
         <NavbarsNavLinkMobile
-          @click="$emit('toggle-nav')"
+          @click="hideNav"
           :to="link.url"
           class="w-full rounded border border-slate-300 p-2 duration-300 ease-in-out hover:bg-blue-500 hover:text-white focus:appearance-none focus:bg-blue-500 focus:text-white dark:border-slate-600 dark:hover:bg-blue-600 dark:focus:bg-blue-600"
           v-for="link in links"
