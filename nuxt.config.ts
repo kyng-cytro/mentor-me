@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     "@nuxt/image-edge",
     "@nuxtjs/supabase",
     "@pinia/nuxt",
+    "@nuxt/devtools",
   ],
   typescript: {
     strict: true,

@@ -37,10 +37,10 @@ const handle_login = async () => {
   if (error) {
     return (login_error.value = { status: true, message: error.message });
   }
-  
-  hideLogin()
 
-  navigateTo("/dashboard");
+  hideLogin();
+
+  navigateTo("/mentee");
 };
 </script>
 
@@ -48,11 +48,11 @@ const handle_login = async () => {
   <div
     tabindex="-1"
     aria-hidden="true"
-    class="fixed left-0 right-0 top-0 z-50 flex h-[calc(100%-1rem)] max-h-full w-full items-center overflow-y-auto overflow-x-hidden p-4 md:inset-0"
+    class="fixed left-0 right-0 top-0 z-50 flex h-[calc(100%)] max-h-full w-full items-center overflow-y-auto overflow-x-hidden p-4 backdrop-blur-md md:inset-0"
   >
     <div class="relative mx-auto max-h-full w-full max-w-md" ref="loginModal">
       <!-- Modal content -->
-      <div class="relative rounded-lg bg-white shadow dark:bg-gray-700">
+      <div class="relative rounded-lg bg-slate-200 shadow-md dark:bg-gray-700">
         <button
           type="button"
           @click="hideLogin"
@@ -93,7 +93,6 @@ const handle_login = async () => {
               <input
                 type="email"
                 name="email"
-                id="email"
                 v-model="email"
                 class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
                 placeholder="name@company.com"
@@ -109,7 +108,6 @@ const handle_login = async () => {
               <input
                 type="password"
                 name="password"
-                id="password"
                 v-model="password"
                 placeholder="••••••••"
                 class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
@@ -133,7 +131,7 @@ const handle_login = async () => {
                 >
               </div>
               <NuxtLink
-                  @click="hideLogin"
+                @click="hideLogin"
                 to="/auth/forgot"
                 class="text-sm text-blue-700 hover:underline dark:text-blue-500"
                 >Lost Password?</NuxtLink
@@ -162,8 +160,7 @@ const handle_login = async () => {
             <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
               Not registered?
               <NuxtLink
-                                    @click="hideLogin"
-
+                @click="hideLogin"
                 to="/auth/signup"
                 class="text-blue-700 hover:underline dark:text-blue-500"
                 >Create account</NuxtLink
