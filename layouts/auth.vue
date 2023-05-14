@@ -10,16 +10,7 @@ const modalStore = useModalStore();
 const { data } = storeToRefs(modalStore);
 </script>
 
-<style>
-.hide-scroll-bar::-webkit-scrollbar {
-  display: none;
-}
-
-.hide-scroll-bar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
+<style scoped>
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s ease;
@@ -33,7 +24,7 @@ const { data } = storeToRefs(modalStore);
 
 <template>
   <div
-    class="font-Nunito relative flex h-full min-h-screen flex-col bg-white text-black dark:bg-slate-800 dark:text-white"
+    class="font-Nunito relative flex h-full min-h-screen flex-col bg-white text-black dark:bg-slate-800 dark:text-white md:h-screen"
   >
     <Transition name="fade">
       <ModalsLogin ref="loginModal" v-show="data.LOGIN" />
@@ -46,8 +37,5 @@ const { data } = storeToRefs(modalStore);
     <div class="flex-1">
       <NuxtPage />
     </div>
-
-    <!-- Footer -->
-    <Footer />
   </div>
 </template>
