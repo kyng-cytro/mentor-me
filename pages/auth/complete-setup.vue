@@ -5,8 +5,29 @@ definePageMeta({
 
 import { z } from "zod";
 
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+
+const user = useSupabaseUser();
+
+const client = useSupabaseAuthClient();
+
+const isDark = useDark();
+
+if (!user.value) {
+  await client.auth.signOut();
+  navigateTo("/auth");
+}
+
 const basicInfoSchema = z.object({
   name: z.string().min(1),
+  dob: z.coerce
+    .date()
+    .refine(
+      (data) =>
+        data < new Date(new Date().setFullYear(new Date().getFullYear() - 1))
+    ),
+  gender: z.enum(["MALE", "FEMALE", "OTHERS"]),
 });
 
 const educationInfoSchema = z.object({
@@ -18,7 +39,7 @@ const careerInfoSchema = z.object({
 });
 
 const formData = reactive({
-  basic_info: { name: "" },
+  basic_info: { name: "", dob: new Date(), gender: "none" },
   education_info: { name: "" },
   career_info: { name: "" },
 });
@@ -57,7 +78,43 @@ function allStepsBeforeAreValid(index: number): boolean {
     .fill(null)
     .some((_, i) => !stepper.at(i)?.isValid());
 }
+
+const formatDate = (date: Date) => {
+  return useDateFormat(date, "DD-MM-YYYY").value;
+};
 </script>
+
+<style>
+/* CSS for custom picker */
+.custom-picker-dark {
+  color: rgb(203 213 225 / 1);
+  background: rgb(55 65 81 / 1);
+  border-color: rgb(75 85 99 / 1);
+  font-size: 0.875rem;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  border-radius: 0.5rem;
+}
+
+.custom-picker-dark::placeholder {
+  color: rgb(203 213 225 / 1);
+}
+
+.custom-picker-light {
+  font-size: 0.875rem;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  border-radius: 0.5rem;
+}
+
+.dp__action_buttons span {
+  color: rgb(22 163 74 / 1);
+}
+.dp__action_buttons .dp__cancel {
+  color: rgb(234 88 12 / 1);
+}
+/* End of custom picker */
+</style>
 
 <style scoped>
 .slide-up-enter-active,
@@ -167,6 +224,7 @@ function allStepsBeforeAreValid(index: number): boolean {
       <form class="w-full max-w-sm sm:max-w-md" @submit.prevent="handle_submit">
         <Transition name="slide-up" mode="out-in">
           <div v-if="stepper.isCurrent('basic-info')">
+            <!-- Name -->
             <div class="mb-6">
               <label
                 for="name"
@@ -176,11 +234,84 @@ function allStepsBeforeAreValid(index: number): boolean {
               <input
                 type="text"
                 name="name"
+                id="name"
                 v-model="formData.basic_info.name"
                 class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                 placeholder="John Doe"
                 required
               />
+            </div>
+            <!-- Email -->
+            <div class="mb-6">
+              <label
+                for="email"
+                class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                >Email</label
+              >
+              <input
+                type="email"
+                name="email"
+                id="email"
+                class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                :value="user?.email"
+                disabled
+              />
+            </div>
+            <!-- Phone -->
+            <div class="mb-6">
+              <label
+                for="phone"
+                class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                >Phone</label
+              >
+              <input
+                type="text"
+                name="phone"
+                id="phone"
+                class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                :value="user?.phone"
+                disabled
+              />
+            </div>
+            <!--  DOB -->
+            <ClientOnly>
+              <div class="mb-6">
+                <label
+                  class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                  >Date of birth</label
+                ><VueDatePicker
+                  v-model="formData.basic_info.dob"
+                  locale="en-GB"
+                  :enable-time-picker="false"
+                  :format="formatDate"
+                  :clearable="false"
+                  :input-class-name="
+                    isDark ? 'custom-picker-dark' : 'custom-picker-light'
+                  "
+                  placeholder="01-02-2003"
+                  auto-apply
+                  required
+                />
+              </div>
+            </ClientOnly>
+            <!-- Gender -->
+            <div class="mb-6">
+              <label
+                for="gender"
+                class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                >Gender</label
+              >
+              <select
+                name="gender"
+                id="gender"
+                class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                v-model="formData.basic_info.gender"
+              >
+                <option value="none">Select a gender</option>
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+                <option value="OTHERS">None Binary</option>
+              </select>
             </div>
           </div>
 
@@ -194,6 +325,7 @@ function allStepsBeforeAreValid(index: number): boolean {
               <input
                 type="text"
                 name="other"
+                id="other"
                 v-model="formData.education_info.name"
                 class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                 placeholder="other stuff"
@@ -205,13 +337,14 @@ function allStepsBeforeAreValid(index: number): boolean {
           <div v-else-if="stepper.isCurrent('career-info')">
             <div class="mb-6">
               <label
-                for="other"
+                for="stuff"
                 class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                 >Other Info</label
               >
               <input
                 type="text"
-                name="other"
+                name="stuff"
+                id="stuff"
                 v-model="formData.career_info.name"
                 class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                 placeholder="other stuff"

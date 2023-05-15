@@ -5,6 +5,17 @@ definePageMeta({
 
 const client = useSupabaseAuthClient();
 
+const user = useSupabaseUser();
+
+onMounted(() => {
+  watchEffect(() => {
+    if (user.value) {
+      loading.value = false;
+      navigateTo("/auth/complete-setup");
+    }
+  });
+});
+
 const loading = ref(false);
 const email = ref("");
 const phone = ref();
@@ -29,18 +40,29 @@ const handle_create = async () => {
 
   reset();
 
+  console.log(phone.value);
+
   const { error } = await client.auth.signUp({
     email: email.value,
-    phone: phone.value,
     password: password.value,
   });
 
-  loading.value = false;
-
   if (error) {
+    loading.value = false;
     return (login_error.value = { status: true, message: error.message });
   }
-  navigateTo("/auth/complete-setup");
+
+  const { error: updateError } = await client.auth.updateUser({
+    phone: phone.value,
+  });
+
+  if (updateError) {
+    loading.value = false;
+    return (login_error.value = {
+      status: true,
+      message: updateError.message,
+    });
+  }
 };
 </script>
 
@@ -85,6 +107,7 @@ const handle_create = async () => {
           <input
             type="email"
             name="email"
+            id="email"
             v-model="email"
             class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-800 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-slate-300 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             placeholder="john@doe.com"
@@ -100,6 +123,7 @@ const handle_create = async () => {
           <input
             type="text"
             name="phone"
+            id="phone"
             v-model="phone"
             class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-800 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-slate-300 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             placeholder="+2348012345678"
@@ -115,6 +139,7 @@ const handle_create = async () => {
           <input
             type="password"
             name="password"
+            id="password"
             v-model="password"
             class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-800 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-slate-300 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             placeholder="••••••••"
@@ -130,6 +155,7 @@ const handle_create = async () => {
           <input
             type="password"
             name="confirm_password"
+            id="confirm_password"
             v-model="confirm_password"
             class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-800 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-slate-300 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             placeholder="••••••••"

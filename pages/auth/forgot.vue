@@ -84,6 +84,7 @@ const handle_reset = async () => {
           <input
             type="email"
             name="email"
+            id="email"
             v-model="email"
             class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-800 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-slate-300 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             placeholder="john@doe.com"
