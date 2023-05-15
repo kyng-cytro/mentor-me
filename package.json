@@ -28,6 +28,7 @@
     "@nuxtjs/tailwindcss": "^6.6.5",
     "@pinia/nuxt": "^0.4.9",
     "@prisma/client": "^4.11.0",
+    "@vuepic/vue-datepicker": "^5.1.0",
     "@vueuse/nuxt": "^9.13.0",
     "h3-zod": "^0.4.2",
     "pinia": "^2.0.35",
