@@ -14,30 +14,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  phone        String   @unique
+  profileImage String?  @unique
+  mentor       Boolean  @default(false)
+  admin        Boolean  @default(false)
+  active       Boolean  @default(true)
+  menteeInfo   Mentee?
+  mentorInfo   Mentor?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
 model Mentee {
   id        String   @id @default(cuid())
   name      String
-  email     String   @unique
-  phone     String   @unique
-  active    Boolean  @default(true)
-  image     String   @unique
   mentors   Mentor[]
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  @@map("mentees")
 }
 
 model Mentor {
   id        String   @id @default(cuid())
   name      String
-  email     String   @unique
-  phone     String   @unique
-  active    Boolean  @default(true)
-  image     String   @unique
   mentees   Mentee[]
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  @@map("mentors")
 }

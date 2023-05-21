@@ -7,7 +7,7 @@ export default defineNuxtRouteMiddleware(async (to, _from) => {
     return navigateTo({ path: "/auth", query: { redirectTo: to.fullPath } });
   }
 
-  const { data, error } = await useFetch("/api/users/get-mentee", {
+  const { data, error } = await useFetch("/api/users/get-user", {
     query: { id: user.value.id },
   });
 
@@ -17,10 +17,17 @@ export default defineNuxtRouteMiddleware(async (to, _from) => {
   }
 
   if (!data.value) {
-    return navigateTo("/auth/complete-setup");
+    return navigateTo({
+      path: "/auth/complete-setup",
+      query: { type: user.value.user_metadata.mentor ? "mentor" : "mentee" },
+    });
   }
 
   if (!data.value.active) {
     return navigateTo("/inactive");
+  }
+
+  if (data.value.mentor) {
+    return navigateTo("/mentor");
   }
 });

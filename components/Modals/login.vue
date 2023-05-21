@@ -15,6 +15,8 @@ onClickOutside(loginModal, () => hideLogin());
 // Login Logic
 const client = useSupabaseAuthClient();
 
+const user = useSupabaseUser();
+
 const loading = ref(false);
 
 const login_error = ref({ status: false, message: "" });
@@ -40,7 +42,12 @@ const handle_login = async () => {
 
   hideLogin();
 
-  navigateTo("/mentee");
+  watchEffect(() => {
+    if (user.value) {
+      if (user.value.user_metadata.mentor) return navigateTo("/mentor");
+      return navigateTo("/mentee");
+    }
+  });
 };
 </script>
 

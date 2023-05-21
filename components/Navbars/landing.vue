@@ -8,6 +8,10 @@ const links = computed(() => [
   { text: "Find a mentor", url: "/find-a-mentor" },
 ]);
 
+// TODO: remove temp
+const user = useSupabaseUser();
+const client = useSupabaseAuthClient();
+
 const modalStore = useModalStore();
 
 const { data } = storeToRefs(modalStore);
@@ -166,10 +170,18 @@ const showLogin = () => {
           >
         </div>
         <!-- Get started Button -->
-        <div>
+        <div v-if="!user">
           <ButtonsNormal
             @click="showLogin"
             text="Get Started"
+            :secondary="true"
+          />
+        </div>
+        <!-- TODO: remove temp -->
+        <div v-else>
+          <ButtonsNormal
+            @click="client.auth.signOut()"
+            text="Logout"
             :secondary="true"
           />
         </div>
