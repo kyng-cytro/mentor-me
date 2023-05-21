@@ -8,7 +8,10 @@ export default eventHandler(async (event) => {
   const id = params.id as string;
 
   try {
-    return await prisma.mentee.findUnique({ where: { id } });
+    return await prisma.user.findUnique({
+      where: { id },
+      include: { menteeInfo: true, mentorInfo: true },
+    });
   } catch {
     throw createError({
       statusCode: 404,

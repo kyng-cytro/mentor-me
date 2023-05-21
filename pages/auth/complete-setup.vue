@@ -10,14 +10,22 @@ import "@vuepic/vue-datepicker/dist/main.css";
 
 const user = useSupabaseUser();
 
+console.log(user.value?.user_metadata.mentor);
+
 const client = useSupabaseAuthClient();
+
+const storage = useSupabaseClient();
 
 const isDark = useDark();
 
-if (!user.value) {
-  await client.auth.signOut();
-  navigateTo("/auth");
-}
+const profileZoneRef = ref<HTMLDivElement>();
+
+onMounted(async () => {
+  if (!user.value) {
+    await client.auth.signOut();
+    navigateTo("/auth");
+  }
+});
 
 const basicInfoSchema = z.object({
   name: z.string().min(1),
@@ -28,6 +36,7 @@ const basicInfoSchema = z.object({
         data < new Date(new Date().setFullYear(new Date().getFullYear() - 1))
     ),
   gender: z.enum(["MALE", "FEMALE", "OTHERS"]),
+  profile_image: z.string().min(1),
 });
 
 const educationInfoSchema = z.object({
@@ -39,7 +48,7 @@ const careerInfoSchema = z.object({
 });
 
 const formData = reactive({
-  basic_info: { name: "", dob: new Date(), gender: "none" },
+  basic_info: { name: "", dob: null, gender: "none", profile_image: "" },
   education_info: { name: "" },
   career_info: { name: "" },
 });
@@ -82,12 +91,28 @@ function allStepsBeforeAreValid(index: number): boolean {
 const formatDate = (date: Date) => {
   return useDateFormat(date, "DD-MM-YYYY").value;
 };
+
+const onDrop = async (files: File[] | null) => {
+  if (files && user.value) {
+    const { data, error } = await storage.storage
+      .from("profiles")
+      .upload(`users/${user.value.id}`, files[0], { upsert: true });
+
+    if (error) {
+      return console.log(error.message);
+    }
+
+    console.log(data);
+  }
+};
+
+const { isOverDropZone } = useDropZone(profileZoneRef, onDrop);
 </script>
 
 <style>
 /* CSS for custom picker */
 .custom-picker-dark {
-  color: rgb(203 213 225 / 1);
+  color: white;
   background: rgb(55 65 81 / 1);
   border-color: rgb(75 85 99 / 1);
   font-size: 0.875rem;
@@ -135,21 +160,7 @@ const formatDate = (date: Date) => {
 
 <template>
   <div class="flex h-full flex-col gap-6 md:flex-row">
-    <div
-      class="hidden w-1/3 items-center justify-center bg-gradient-to-b from-blue-500 to-blue-700 md:flex"
-    >
-      <div class="px-4 py-6 text-center text-slate-200">
-        <h4 class="mb-6 text-xl font-semibold text-slate-100">
-          We are more than just a company
-        </h4>
-        <p class="text-sm lg:max-w-md">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
-        </p>
-      </div>
-    </div>
+    <SideBarsAuth />
     <div
       class="flex flex-1 flex-col items-center gap-6 px-3 py-10 md:col-span-2 md:justify-center md:py-0"
     >
@@ -241,38 +252,6 @@ const formatDate = (date: Date) => {
                 required
               />
             </div>
-            <!-- Email -->
-            <div class="mb-6">
-              <label
-                for="email"
-                class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                >Email</label
-              >
-              <input
-                type="email"
-                name="email"
-                id="email"
-                class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                :value="user?.email"
-                disabled
-              />
-            </div>
-            <!-- Phone -->
-            <div class="mb-6">
-              <label
-                for="phone"
-                class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                >Phone</label
-              >
-              <input
-                type="text"
-                name="phone"
-                id="phone"
-                class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                :value="user?.phone"
-                disabled
-              />
-            </div>
             <!--  DOB -->
             <ClientOnly>
               <div class="mb-6">
@@ -288,7 +267,7 @@ const formatDate = (date: Date) => {
                   :input-class-name="
                     isDark ? 'custom-picker-dark' : 'custom-picker-light'
                   "
-                  placeholder="01-02-2003"
+                  placeholder="Date of birth"
                   auto-apply
                   required
                 />
@@ -312,6 +291,50 @@ const formatDate = (date: Date) => {
                 <option value="FEMALE">Female</option>
                 <option value="OTHERS">None Binary</option>
               </select>
+            </div>
+            <!-- Profile Image -->
+            <div class="mb-6">
+              <span
+                class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                >Profile Picture</span
+              >
+              <div
+                ref="profileZoneRef"
+                :class="{
+                  'bg-gray-100  dark:border-gray-500 dark:bg-gray-600':
+                    isOverDropZone,
+                  'border-gray-300 bg-gray-50 dark:border-gray-600 dark:bg-gray-700':
+                    !isOverDropZone,
+                }"
+                class="dark:hover:bg-bray-800 flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed hover:bg-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+              >
+                <div
+                  class="flex flex-col items-center justify-center pb-6 pt-5"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="mb-3 h-10 w-10 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                    ></path>
+                  </svg>
+                  <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                    <span class="font-semibold">Drag and Drop</span> a profile
+                    picture
+                  </p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">
+                    PNG or JPG (MAX. 500kb)
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 

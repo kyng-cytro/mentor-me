@@ -35,6 +35,7 @@ const handle_login = async () => {
   });
 
   if (error) {
+    loading.value = false;
     return (login_error.value = { status: true, message: error.message });
   }
 };

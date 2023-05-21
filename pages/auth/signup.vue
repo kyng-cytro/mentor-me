@@ -3,6 +3,10 @@ definePageMeta({
   layout: "auth",
 });
 
+const route = useRoute();
+
+const { mentor } = route.query;
+
 const client = useSupabaseAuthClient();
 
 const user = useSupabaseUser();
@@ -11,7 +15,10 @@ onMounted(() => {
   watchEffect(() => {
     if (user.value) {
       loading.value = false;
-      navigateTo("/auth/complete-setup");
+      return navigateTo({
+        path: "/auth/complete-setup",
+        query: { type: user.value.user_metadata.mentor ? "mentor" : "mentee" },
+      });
     }
   });
 });
@@ -45,6 +52,7 @@ const handle_create = async () => {
   const { error } = await client.auth.signUp({
     email: email.value,
     password: password.value,
+    options: { data: { mentor: mentor ? true : false } },
   });
 
   if (error) {
@@ -68,21 +76,7 @@ const handle_create = async () => {
 
 <template>
   <div class="flex h-full flex-col gap-6 md:flex-row">
-    <div
-      class="hidden w-1/3 items-center justify-center bg-gradient-to-b from-blue-500 to-blue-700 md:flex"
-    >
-      <div class="px-4 py-6 text-center text-slate-200">
-        <h4 class="mb-6 text-xl font-semibold text-slate-100">
-          We are more than just a company
-        </h4>
-        <p class="text-sm lg:max-w-md">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
-        </p>
-      </div>
-    </div>
+    <SideBarsAuth />
     <div
       class="flex flex-1 flex-col items-center px-3 py-10 md:col-span-2 md:justify-center md:py-0"
     >
