@@ -10,7 +10,10 @@ export default eventHandler(async (event) => {
   try {
     return await prisma.user.findUnique({
       where: { id },
-      include: { menteeInfo: true, mentorInfo: true },
+      include: {
+        mentee: true,
+        mentor: true,
+      },
     });
   } catch {
     throw createError({
