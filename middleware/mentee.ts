@@ -17,10 +17,14 @@ export default defineNuxtRouteMiddleware(async (to, _from) => {
   }
 
   if (!data.value) {
-    return navigateTo({
-      path: "/auth/complete-setup",
-      query: { type: user.value.user_metadata.mentor ? "mentor" : "mentee" },
-    });
+    if (user.value.user_metadata.mentor == false)
+      return navigateTo("/mentee/complete-setup");
+
+    if (user.value.user_metadata.mentor == true)
+      return navigateTo("/mentor/complete-setup");
+
+    await client.auth.signOut();
+    return navigateTo("/auth");
   }
 
   if (!data.value.active) {
