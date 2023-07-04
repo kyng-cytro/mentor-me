@@ -31,7 +31,7 @@ export default defineNuxtRouteMiddleware(async (to, _from) => {
     return navigateTo("/inactive");
   }
 
-  if (data.value.mentor) {
+  if (data.value.role === "MENTOR") {
     return navigateTo("/mentor");
   }
 });

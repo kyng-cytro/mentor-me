@@ -32,14 +32,17 @@ model User {
 
 model Mentor {
   id                String         @id @default(cuid())
-  expertise         String
+  currentTitle      String         @map("current_title")
+  companyName       String         @map("company_name")
+  fieldOfExpertise  String         @map("field_of_expertise")
   yearsOfExperience Int            @map("years_of_experience")
   description       String
   rating            Float
+  isTopMentor       Boolean        @default(false) @map("is_top_mentor")
   user              User           @relation(fields: [userId], references: [id])
   userId            String
   mentees           Mentee[]
-  Meetings          Meetings[]
+  meetings          Meetings[]
   testimonials      Testimonial[]
   availabilities    Availability[]
 }
@@ -50,12 +53,12 @@ model Mentee {
   careerGoals      String     @map("career_goals")
   careerHistory    String     @map("career_history")
   careerChallenges String     @map("career_challenges")
-  skills           Skill[]
+  skills           String[]
   bio              String
   user             User       @relation(fields: [userId], references: [id])
   userId           String
   mentors          Mentor[]
-  Meetings         Meetings[]
+  meetings         Meetings[]
 }
 
 model Meetings {
@@ -71,14 +74,6 @@ model Meetings {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 }
 
-model Skill {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  mentee    Mentee[]
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-}
-
 model Testimonial {
   id        String   @id @default(cuid())
   content   String
@@ -90,10 +85,9 @@ model Testimonial {
 
 model Availability {
   id        String   @id @default(cuid())
-  startTime DateTime @default(now()) @map("start_time")
-  endTime   DateTime @default(now()) @map("end_time")
   dayOfWeek String   @map("day_of_week")
-  Mentor    Mentor?  @relation(fields: [mentorId], references: [id])
+  times     String[]
+  mentor    Mentor?  @relation(fields: [mentorId], references: [id])
   mentorId  String?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
