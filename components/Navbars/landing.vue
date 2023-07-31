@@ -28,6 +28,11 @@ const showLogin = () => {
   hideNav();
   modalStore.show("LOGIN");
 };
+
+const handleLogout = async () => {
+  await client.auth.signOut();
+  return navigateTo("/");
+};
 </script>
 
 <style scoped>
@@ -180,7 +185,7 @@ const showLogin = () => {
         <!-- TODO: remove temp -->
         <div v-else>
           <ButtonsNormal
-            @click="client.auth.signOut()"
+            @click="handleLogout"
             text="Logout"
             :secondary="true"
           />
