@@ -22,7 +22,6 @@ model User {
   active       Boolean  @default(true)
   profileImage String?  @map("profile_image")
   gender       String
-  dob          DateTime
   role         Role     @default(MENTEE)
   mentor       Mentor[]
   mentee       Mentee[]
@@ -37,7 +36,7 @@ model Mentor {
   fieldOfExpertise  String         @map("field_of_expertise")
   yearsOfExperience Int            @map("years_of_experience")
   description       String
-  rating            Float
+  rating            Float          @default(0.0)
   isTopMentor       Boolean        @default(false) @map("is_top_mentor")
   user              User           @relation(fields: [userId], references: [id])
   userId            String
@@ -55,6 +54,7 @@ model Mentee {
   careerChallenges String     @map("career_challenges")
   skills           String[]
   bio              String
+  dob              DateTime
   user             User       @relation(fields: [userId], references: [id])
   userId           String
   mentors          Mentor[]

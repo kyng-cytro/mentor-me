@@ -4,8 +4,8 @@ definePageMeta({
 });
 
 import {
-  basicInfoSchema,
-  careerInfoSchema,
+  menteeBasicInfoSchema,
+  menteeCareerInfoSchema,
   educationInfoSchema,
 } from "~/lib/schemas";
 
@@ -42,7 +42,7 @@ const stepper = useStepper({
   "basic-info": {
     title: "Basic Information",
     svg: "basic-info" as const,
-    isValid: () => basicInfoSchema.safeParse(formData.basic_info).success,
+    isValid: () => menteeBasicInfoSchema.safeParse(formData.basic_info).success,
   },
   "education-info": {
     title: "Education Information",
@@ -53,7 +53,8 @@ const stepper = useStepper({
   "career-info": {
     title: "Career Information",
     svg: "career-info" as const,
-    isValid: () => careerInfoSchema.safeParse(formData.career_info).success,
+    isValid: () =>
+      menteeCareerInfoSchema.safeParse(formData.career_info).success,
   },
 });
 

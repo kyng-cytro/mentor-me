@@ -1,5 +1,5 @@
 import { serverSupabaseUser } from "#supabase/server";
-import { menteeFormDataSchema } from "~/lib/schemas";
+import { mentorFormDataSchema } from "~/lib/schemas";
 import prisma_client from "~/lib/prisma";
 
 const prisma = prisma_client;
@@ -14,7 +14,7 @@ export default eventHandler(async (event) => {
     });
   }
 
-  const body = menteeFormDataSchema.safeParse(await readBody(event));
+  const body = mentorFormDataSchema.safeParse(await readBody(event));
 
   if (!body.success) {
     throw createError({
@@ -33,16 +33,14 @@ export default eventHandler(async (event) => {
         phone: user.phone as string,
         name: data.basic_info.name,
         gender: data.basic_info.gender,
-        role: "MENTEE",
-        mentee: {
+        role: "MENTOR",
+        mentor: {
           create: {
-            bio: data.education_info.bio,
-            dob: data.basic_info.dob,
-            careerGoals: data.career_info.career_goals,
-            careerHistory: data.career_info.career_history,
-            careerChallenges: data.career_info.career_challenges,
-            educationLevel: data.education_info.education_level.value,
-            skills: data.education_info.skills,
+            currentTitle: data.career_info.currentTitle,
+            companyName: data.career_info.companyName,
+            fieldOfExpertise: data.career_info.fieldOfExpertise,
+            yearsOfExperience: data.career_info.yearsOfExperience,
+            description: data.basic_info.description,
           },
         },
       },

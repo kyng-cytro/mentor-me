@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import { z } from "zod";
-import { basicInfoSchema } from "~/lib/schemas";
+import { availabilitySchema, mentorCareerInfoSchema } from "~/lib/schemas";
 
 definePageMeta({
   layout: "auth",
 });
-
-import { formatDate } from "~/lib/utils";
 
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 import VueMultiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.css";
+import { mentorBasicInfoSchema } from "~/lib/schemas";
+import { fieldOfExpertise, weekDays } from "~/lib/utils";
 
 const user = useSupabaseUser();
 const client = useSupabaseAuthClient();
@@ -29,7 +28,7 @@ onMounted(async () => {
 
 // NOTE: Form Data
 const formData = reactive({
-  basic_info: { name: "", dob: new Date(), gender: "", description: "" },
+  basic_info: { name: "", gender: "", description: "" },
   career_info: {
     currentTitle: "",
     companyName: "",
@@ -39,34 +38,17 @@ const formData = reactive({
   availability: [{ day: "", time_range: "" }],
 });
 
-const careerInfoSchema = z.object({
-  currentTitle: z.string().min(1),
-  companyName: z.string().min(1),
-  fieldOfExpertise: z.string().min(1),
-  yearsOfExperience: z.number().min(1),
-});
-
-const availabilitySchema = z
-  .object({
-    day: z.string().min(1),
-    time_range: z
-      .object({ hours: z.number(), minutes: z.number(), seconds: z.number() })
-      .array()
-      .min(2),
-  })
-  .array()
-  .min(1);
-
 const stepper = useStepper({
   "basic-info": {
     title: "Basic Information",
     svg: "basic-info" as const,
-    isValid: () => basicInfoSchema.safeParse(formData.basic_info).success,
+    isValid: () => mentorBasicInfoSchema.safeParse(formData.basic_info).success,
   },
   "career-info": {
     title: "Career Information",
     svg: "career-info" as const,
-    isValid: () => careerInfoSchema.safeParse(formData.career_info).success,
+    isValid: () =>
+      mentorCareerInfoSchema.safeParse(formData.career_info).success,
   },
   availability: {
     title: "Availability",
@@ -87,9 +69,23 @@ function allStepsBeforeAreValid(index: number): boolean {
     .some((_, i) => !stepper.at(i)?.isValid());
 }
 
-const handle_submit = async () => {};
+const handle_submit = async () => {
+  loading.value = true;
 
-const weekDays: string[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const { error } = await useFetch("/api/mentor/add", {
+    method: "POST",
+    body: formData,
+    headers: useRequestHeaders(["cookie"]) as Record<string, string>,
+  });
+
+  loading.value = false;
+
+  if (!error.value) {
+    return navigateTo("/mentor");
+  }
+
+  return console.log(error.value.message);
+};
 
 const addSlot = () => {
   formData.availability.push({ day: "", time_range: "" });
@@ -199,27 +195,6 @@ const removeSlot = (index: number) => {
                   required
                 />
               </div>
-              <!--  DOB -->
-              <div class="mb-6">
-                <label
-                  for="dob"
-                  class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                  >Date of birth</label
-                ><VueDatePicker
-                  v-model="formData.basic_info.dob"
-                  locale="en-GB"
-                  name="dob"
-                  :enable-time-picker="false"
-                  :format="formatDate"
-                  :clearable="false"
-                  :input-class-name="
-                    isDark ? 'custom-picker-dark' : 'custom-picker-light'
-                  "
-                  placeholder="Date of birth"
-                  auto-apply
-                  required
-                />
-              </div>
               <!-- Gender -->
               <div class="mb-6">
                 <label
@@ -239,6 +214,31 @@ const removeSlot = (index: number) => {
                   deselect-label="Can't remove select another"
                 />
               </div>
+              <!-- Description -->
+              <div class="mb-6">
+                <label
+                  for="description"
+                  class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                  >Short Description</label
+                >
+                <textarea
+                  name="description"
+                  id="description"
+                  rows="3"
+                  minlength="200"
+                  maxlength="600"
+                  v-model="formData.basic_info.description"
+                  class="hide-scroll-bar block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                  placeholder="What potential should know"
+                  required
+                >
+                </textarea>
+                <p
+                  class="mb-2 block text-right text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  200-600 characters
+                </p>
+              </div>
             </div>
             <div v-else-if="stepper.isCurrent('career-info')">
               <div class="mb-6">
@@ -251,7 +251,7 @@ const removeSlot = (index: number) => {
                   :class="isDark ? 'custom-select-dark' : 'custom-select-light'"
                   name="field_of_expertise"
                   v-model="formData.career_info.fieldOfExpertise"
-                  :options="['Test']"
+                  :options="fieldOfExpertise"
                   :allow-empty="false"
                   :close-on-select="true"
                   :searchable="true"

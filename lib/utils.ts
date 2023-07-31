@@ -69,3 +69,41 @@ export const skills = [
   "Customer Relationship",
   "Supply Chain Management",
 ];
+
+export const fieldOfExpertise: String[] = [
+  "Technology and Software Development",
+  "Entrepreneurship and Startups",
+  "Business and Management",
+  "Marketing and Advertising",
+  "Design (Graphic, Web, UI/UX, etc.)",
+  "Finance and Investment",
+  "Health and Wellness",
+  "Education and Teaching",
+  "Career Development and Job Search",
+  "Writing and Publishing",
+  "Arts and Entertainment",
+  "Science and Research",
+  "Environmental and Sustainability",
+  "Social Services and Non-Profit",
+  "Sports and Fitness",
+  "Personal Development and Life Coaching",
+  "Parenting and Family",
+  "Travel and Exploration",
+  "Photography and Videography",
+  "Culinary Arts and Cooking",
+  "Language Learning and Linguistics",
+  "Music and Audio Production",
+  "Fashion and Beauty",
+  "Psychology and Counseling",
+  "Law and Legal Services",
+];
+
+export const weekDays: string[] = [
+  "Mon",
+  "Tue",
+  "Wed",
+  "Thu",
+  "Fri",
+  "Sat",
+  "Sun",
+];
