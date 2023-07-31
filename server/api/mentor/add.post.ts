@@ -1,3 +1,4 @@
+import { zh } from "h3-zod";
 import { serverSupabaseUser } from "#supabase/server";
 import { mentorFormDataSchema } from "~/lib/schemas";
 import prisma_client from "~/lib/prisma";
@@ -14,16 +15,7 @@ export default eventHandler(async (event) => {
     });
   }
 
-  const body = mentorFormDataSchema.safeParse(await readBody(event));
-
-  if (!body.success) {
-    throw createError({
-      statusCode: 403,
-      message: "Invalid user input",
-    });
-  }
-
-  const data = body.data;
+  const data = await zh.useValidatedBody(event, mentorFormDataSchema);
 
   try {
     return await prisma.user.create({
