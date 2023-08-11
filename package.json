@@ -26,6 +26,7 @@
     "@blokwise/dynamic": "^2.0.0-6",
     "@nuxt/image-edge": "^1.0.0-28008586.381b906",
     "@nuxtjs/tailwindcss": "^6.6.5",
+    "@pinia-plugin-persistedstate/nuxt": "^1.1.1",
     "@pinia/nuxt": "^0.4.9",
     "@prisma/client": "^4.11.0",
     "@uppy/core": "^3.2.0",

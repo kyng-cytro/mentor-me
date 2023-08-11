@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     "@nuxtjs/supabase",
     "@pinia/nuxt",
     "@nuxt/devtools",
+    "@pinia-plugin-persistedstate/nuxt",
   ],
   typescript: {
     strict: true,
