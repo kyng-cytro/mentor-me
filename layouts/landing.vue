@@ -11,6 +11,14 @@ const { data } = storeToRefs(modalStore);
 </script>
 
 <style>
+#tsparticles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
 .hide-scroll-bar::-webkit-scrollbar {
   display: none;
 }

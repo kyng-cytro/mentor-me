@@ -11,9 +11,10 @@ const showLogin = () => {
 
 <template>
   <section
-    class="bg-gray-700 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/conference.jpg')] bg-center bg-no-repeat bg-blend-multiply"
+    class="relative bg-slate-700 "
   >
-    <div class="mx-auto max-w-screen-xl px-4 py-24 text-center lg:py-56">
+    <Particles/>
+    <div class="relative z-20 mx-auto max-w-screen-xl px-4 py-24 text-center lg:py-56">
       <h1
         class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-6xl"
       >
