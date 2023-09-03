@@ -1,12 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  experimental: {
+    viewTransition: true,
+  },
   modules: [
     "@nuxtjs/tailwindcss",
     "@vueuse/nuxt",
     "@nuxt/image-edge",
     "@nuxtjs/supabase",
     "@pinia/nuxt",
-    "@nuxt/devtools",
     "@pinia-plugin-persistedstate/nuxt",
   ],
   typescript: {
@@ -40,18 +42,7 @@ export default defineNuxtConfig({
     },
   },
   tailwindcss: {
-    config: {
-      content: [],
-      darkMode: "class",
-      plugins: [require("@tailwindcss/forms")],
-      theme: {
-        extend: {
-          fontFamily: {
-            Nunito: ["Nunito", "sans-serif"],
-          },
-        },
-      },
-    },
+    config: {},
   },
   vite: {
     resolve: {

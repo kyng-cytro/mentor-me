@@ -1,10 +1,7 @@
 {
-  "name": "nuxt-app",
   "private": true,
-  "overrides": {
-    "vue": "latest"
-  },
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
@@ -12,34 +9,28 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^0.4.5",
     "@nuxtjs/supabase": "^0.3.5",
     "@tailwindcss/forms": "^0.5.3",
     "consola": "^3.1.0",
-    "nuxt": "^3.3.3",
-    "prettier": "^2.8.7",
-    "prettier-plugin-tailwindcss": "^0.2.7",
+    "nuxt": "^3.7.0",
+    "prettier": "^3.0.3",
+    "prettier-plugin-tailwindcss": "^0.5.4",
     "prisma": "^4.11.0",
     "zod-prisma-types": "^2.5.5"
   },
   "dependencies": {
-    "@blokwise/dynamic": "^2.0.0-6",
     "@nuxt/image-edge": "^1.0.0-28008586.381b906",
     "@nuxtjs/tailwindcss": "^6.6.5",
     "@pinia-plugin-persistedstate/nuxt": "^1.1.1",
     "@pinia/nuxt": "^0.4.9",
     "@prisma/client": "^4.11.0",
-    "@uppy/core": "^3.2.0",
-    "@uppy/dashboard": "^3.4.0",
-    "@uppy/drag-drop": "^3.0.2",
-    "@uppy/progress-bar": "^3.0.2",
-    "@uppy/tus": "^3.1.0",
-    "@uppy/vue": "^1.0.2",
     "@vuepic/vue-datepicker": "^5.1.0",
     "@vueuse/nuxt": "^9.13.0",
     "h3-zod": "^0.4.2",
     "pinia": "^2.0.35",
+    "tsparticles-slim": "^2.12.0",
     "vue-multiselect": "^3.0.0-beta.2",
+    "vue3-particles": "^2.12.0",
     "zod": "^3.21.4"
   }
 }

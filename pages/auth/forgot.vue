@@ -22,8 +22,9 @@ const handle_reset = async () => {
 
   reset();
 
+  //TODO: change url
   const { error } = await client.auth.resetPasswordForEmail(email.value, {
-    redirectTo: "/auth/reset",
+    redirectTo: "http://localhost:3000/auth/reset",
   });
 
   loading.value = false;
