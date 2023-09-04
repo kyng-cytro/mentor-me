@@ -1,20 +1,15 @@
 <script lang="ts" setup>
 import { loadSlim } from "tsparticles-slim";
-import { Engine, Container} from "tsparticles-engine";
+import { Engine } from "tsparticles-engine";
 
 const particlesInit = async (engine: Engine) => {
   await loadSlim(engine);
-};
-
-const particlesLoaded = async (container: Container) => {
-  console.log("Particles container loaded", container);
 };
 </script>
 <template>
   <vue-particles
     id="tsparticles"
     :particlesInit="particlesInit"
-    :particlesLoaded="particlesLoaded"
     :options="{
       background: {
         color: {
@@ -24,12 +19,12 @@ const particlesLoaded = async (container: Container) => {
       fpsLimit: 120,
       fullScreen: {
         enable: false,
-        zIndex: -1,
+        zIndex: 0,
       },
       interactivity: {
         events: {
           onClick: {
-            enable: true,
+            enable: false,
             mode: 'push',
           },
           onHover: {
@@ -78,7 +73,7 @@ const particlesLoaded = async (container: Container) => {
             enable: true,
             area: 800,
           },
-          value: 50,
+          value: 80,
         },
         opacity: {
           value: 0.3,
