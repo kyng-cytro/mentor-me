@@ -14,19 +14,18 @@ const { data } = storeToRefs(searchStore);
 <template>
   <div class="mx-auto max-w-5xl px-3 py-10 space-y-6">
     <SearchMentor />
-
     <div
       class="grid grid-cols-1 grid-row-2 md:grid-cols-3 md:grid-rows-1 gap-6"
     >
-      <div class="col-span-1 px-3">
+      <div class="md:col-span-1 px-3 space-y-3">
         <h3 class="font-mono font-light py-2">Filter Result</h3>
         <div
-          class="p-4 h-96 block rounded-lg bg-white shadow-lg dark:bg-slate-700 dark:shadow-black/30"
+          class="p-4 h-96 rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
         >
           test
         </div>
       </div>
-      <div class="col-span-2 px-3">
+      <div class="md:col-span-2 px-3 space-y-3">
         <div class="flex items-center justify-between font-mono font-light">
           <span>120 Results</span>
           <button
@@ -69,7 +68,7 @@ const { data } = storeToRefs(searchStore);
           </button>
         </div>
         <div
-          class="p-4 h-96 block rounded-lg bg-white shadow-lg dark:bg-slate-700 dark:shadow-black/30"
+          class="p-4 h-96 border rounded-lg border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
         >
           test
         </div>
