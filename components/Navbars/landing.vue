@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { landingItems } from "~/lib/utils";
 import { useModalStore } from "~/stores/modalStore";
-
-const links = computed(() => [
-  { text: "Become a mentor", url: "/become-a-mentor" },
-  { text: "Live sessions", url: "/live-sessions" },
-  { text: "Find a mentor", url: "/find-a-mentor" },
-]);
 
 // TODO: remove temp
 const user = useSupabaseUser();
-const client = useSupabaseAuthClient();
+const client = useSupabaseClient();
 
 const modalStore = useModalStore();
 
@@ -109,10 +104,18 @@ const handleLogout = async () => {
 
       <!-- Mobile Nav Toggle -->
       <div class="flex items-center gap-3 md:hidden">
-        <div>
+        <div v-if="!user">
           <ButtonsNormal
             @click="showLogin"
             text="Get Started"
+            :secondary="true"
+          />
+        </div>
+        <!-- TODO: remove temp -->
+        <div v-else>
+          <ButtonsNormal
+            @click="handleLogout"
+            text="Logout"
             :secondary="true"
           />
         </div>
@@ -170,7 +173,7 @@ const handleLogout = async () => {
           <NavbarsNavLink
             :to="link.url"
             class="block rounded p-2 duration-300 ease-in-out hover:text-blue-500 focus:appearance-none focus:text-blue-500 dark:hover:text-blue-600 dark:focus:text-blue-600"
-            v-for="link in links"
+            v-for="link in landingItems"
             >{{ link.text }}</NavbarsNavLink
           >
         </div>
@@ -203,7 +206,7 @@ const handleLogout = async () => {
           @click="hideNav"
           :to="link.url"
           class="w-full rounded border border-slate-300 p-2 duration-300 ease-in-out hover:bg-blue-500 hover:text-white focus:appearance-none focus:bg-blue-500 focus:text-white dark:border-slate-600 dark:hover:bg-blue-600 dark:focus:bg-blue-600"
-          v-for="link in links"
+          v-for="link in landingItems"
           >{{ link.text }}</NavbarsNavLinkMobile
         >
       </div>

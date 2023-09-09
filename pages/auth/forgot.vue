@@ -27,8 +27,6 @@ const handle_reset = async () => {
     redirectTo: "http://localhost:3000/auth/reset",
   });
 
-  console.log("Here");
-
   loading.value = false;
 
   if (error) {

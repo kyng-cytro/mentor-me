@@ -41,6 +41,14 @@ export default defineNuxtConfig({
       ],
     },
   },
+  supabase: {
+    redirectOptions: {
+      login: "/auth",
+      callback: "/auth/confirm",
+      exclude: ["/", "/become-a-mentor", "/find-a-mentor", "/live-sessions"],
+    },
+  },
+
   tailwindcss: {
     config: {},
   },

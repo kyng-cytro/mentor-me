@@ -18,7 +18,7 @@ import VueMultiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.css";
 
 const user = useSupabaseUser();
-const client = useSupabaseAuthClient();
+const client = useSupabaseClient();
 const isDark = useDark();
 const loading = ref(false);
 

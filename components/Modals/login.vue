@@ -13,7 +13,7 @@ const hideLogin = () => {
 onClickOutside(loginModal, () => hideLogin());
 
 // Login Logic
-const client = useSupabaseAuthClient();
+const client = useSupabaseClient();
 
 const user = useSupabaseUser();
 
