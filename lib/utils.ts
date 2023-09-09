@@ -70,7 +70,7 @@ export const skills = [
   "Supply Chain Management",
 ];
 
-export const fieldOfExpertise: String[] = [
+export const fieldOfExpertise: string[] = [
   "Technology and Software Development",
   "Entrepreneurship and Startups",
   "Business and Management",

@@ -5,6 +5,7 @@ defineProps({
     required: true,
   },
   full: Boolean,
+  center: Boolean,
   secondary: Boolean,
   loading: Boolean,
   disabled: Boolean,
@@ -24,8 +25,17 @@ defineProps({
     class="rounded-lg px-5 py-2.5 font-medium duration-300 ease-in-out focus:outline-none focus:ring-4"
     :disabled="loading || disabled"
   >
-    <span class="flex items-center" v-show="!loading"><slot /> {{ text }}</span>
-    <span class="flex items-center" v-show="loading">
+    <span
+      :class="{ 'justify-center': center }"
+      class="flex items-center"
+      v-show="!loading"
+      ><slot /> {{ text }}</span
+    >
+    <span
+      :class="{ 'justify-center': center }"
+      class="flex items-center"
+      v-show="loading"
+    >
       <svg
         aria-hidden="true"
         role="status"
