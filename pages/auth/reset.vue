@@ -3,7 +3,7 @@ definePageMeta({
   layout: "auth",
 });
 
-const client = useSupabaseAuthClient();
+const client = useSupabaseClient();
 
 const user = useSupabaseUser();
 

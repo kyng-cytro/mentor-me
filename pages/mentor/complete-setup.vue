@@ -14,7 +14,7 @@ import { mentorBasicInfoSchema } from "~/lib/schemas";
 import { fieldOfExpertise, weekDays } from "~/lib/utils";
 
 const user = useSupabaseUser();
-const client = useSupabaseAuthClient();
+const client = useSupabaseClient();
 const isDark = useDark();
 const loading = ref(false);
 

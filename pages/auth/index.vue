@@ -3,17 +3,22 @@ definePageMeta({
   layout: "auth",
 });
 
-const client = useSupabaseAuthClient();
+const client = useSupabaseClient();
 
 const user = useSupabaseUser();
 
 const route = useRoute();
 
-watchEffect(async () => {
-  if (user.value) {
-    loading.value = false;
-    return navigateTo((route.query.redirectTo as string) ?? "/mentee");
-  }
+onMounted(() => {
+  watchEffect(async () => {
+    if (user.value) {
+      loading.value = false;
+      if (user.value.user_metadata.mentor)
+        return navigateTo((route.query.redirectTo as string) ?? "/mentor");
+
+      return navigateTo((route.query.redirectTo as string) ?? "/mentee");
+    }
+  });
 });
 
 const loading = ref(false);

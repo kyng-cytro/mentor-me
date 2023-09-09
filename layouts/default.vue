@@ -7,6 +7,13 @@ const toggleDark = useToggle(isDark);
   <div
     class="font-Nunito flex min-h-screen flex-col gap-3 bg-slate-200 dark:bg-slate-800 dark:text-slate-50 md:h-screen md:flex-row"
   >
+    <NavbarsDashboard
+      class="flex flex-col gap-0 md:hidden"
+      :dark="isDark"
+      @toggle-dark="toggleDark()"
+      ref="target"
+    />
+
     <SideBarsDashboard
       :dark="isDark"
       @toggle-dark="toggleDark()"

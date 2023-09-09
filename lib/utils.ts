@@ -98,6 +98,26 @@ export const fieldOfExpertise: string[] = [
   "Law and Legal Services",
 ];
 
+export const landingItems = [
+  { text: "Become a mentor", url: "/become-a-mentor" },
+  { text: "Live sessions", url: "/live-sessions" },
+  { text: "Find a mentor", url: "/find-a-mentor" },
+];
+
+export const dashboardItemsMentee = [
+  { url: "/mentee", text: "Dashboard" },
+  { url: "/tasks", text: "Tasks" },
+  { url: "/mentee/mentors", text: "Mentors" },
+  { url: "/settings", text: "Settings" },
+];
+
+export const dashboardItemsMentor = [
+  { url: "/mentee", text: "Dashboard" },
+  { url: "/tasks", text: "Tasks" },
+  { url: "/mentors/mentees", text: "Mentees" },
+  { url: "/settings", text: "Settings" },
+];
+
 export const weekDays: string[] = [
   "Mon",
   "Tue",

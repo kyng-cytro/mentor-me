@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { dashboardItemsMentee, dashboardItemsMentor } from "~/lib/utils";
+
 const user = useSupabaseUser();
 
 const { data: userInfo } = await useFetch("/api/users/get-user", {
@@ -15,7 +17,7 @@ const toggleSystem = () => {
 };
 
 const logout = async () => {
-  await useSupabaseAuthClient().auth.signOut();
+  await useSupabaseClient().auth.signOut();
   navigateTo("/auth");
 };
 
@@ -66,14 +68,23 @@ defineProps({
         class="flex flex-col items-center space-y-3"
         v-if="userInfo?.role === 'MENTEE'"
       >
-        <ButtonsNavButtons :full_width="true" to="/mentee" text="Dashboard" />
         <ButtonsNavButtons
           :full_width="true"
-          to="/mentee/mentors"
-          text="Mentors"
+          :to="item.url"
+          :text="item.text"
+          v-for="item in dashboardItemsMentee"
         />
-        <ButtonsNavButtons :full_width="true" to="/messages" text="Messages" />
-        <ButtonsNavButtons :full_width="true" to="/settings" text="Settings" />
+      </div>
+      <div
+        class="flex flex-col items-center space-y-3"
+        v-if="userInfo?.role === 'MENTOR'"
+      >
+        <ButtonsNavButtons
+          :full_width="true"
+          :to="item.url"
+          :text="item.text"
+          v-for="item in dashboardItemsMentor"
+        />
       </div>
     </div>
 

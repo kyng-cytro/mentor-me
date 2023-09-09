@@ -1,13 +1,13 @@
 import { defineStore } from "pinia";
 
 export const useModalStore = defineStore("modals", () => {
-  const data = ref({ LOGIN: false, NAVIGATION: false });
+  const data = ref({ LOGIN: false, NAVIGATION: false, DASHBOARD: false });
 
-  const show = (type: "LOGIN" | "NAVIGATION") => {
+  const show = (type: "LOGIN" | "NAVIGATION" | "DASHBOARD") => {
     data.value[type] = true;
   };
 
-  const hide = (type: "LOGIN" | "NAVIGATION") => {
+  const hide = (type: "LOGIN" | "NAVIGATION" | "DASHBOARD") => {
     data.value[type] = false;
   };
 

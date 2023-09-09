@@ -7,7 +7,7 @@ const route = useRoute();
 
 const { mentor } = route.query;
 
-const client = useSupabaseAuthClient();
+const client = useSupabaseClient();
 
 const user = useSupabaseUser();
 
