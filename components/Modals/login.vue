@@ -17,6 +17,8 @@ const client = useSupabaseAuthClient();
 
 const user = useSupabaseUser();
 
+const route = useRoute();
+
 const loading = ref(false);
 
 const login_error = ref({ status: false, message: "" });
@@ -44,8 +46,10 @@ const handle_login = async () => {
 
   watchEffect(() => {
     if (user.value) {
-      if (user.value.user_metadata.mentor) return navigateTo("/mentor");
-      return navigateTo("/mentee");
+      if (user.value.user_metadata.mentor)
+        return navigateTo((route.query.redirectTo as string) ?? "/mentor");
+
+      return navigateTo((route.query.redirectTo as string) ?? "/mentee");
     }
   });
 };

@@ -30,7 +30,7 @@ defineProps({
 
       <div class="flex flex-col">
         <NuxtLink
-          to="/"
+          :to="`/mentee/mentors/${id}`"
           class="text-xl font-semibold capitalize hover:underline"
           >{{ name }}</NuxtLink
         >
@@ -68,7 +68,7 @@ defineProps({
     <!-- Button -->
     <div>
       <NuxtLink
-        to="/"
+        :to="`/mentee/mentors/${id}`"
         class="rounded-md p-2 text-sm font-medium duration-300 ease-in-out hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:hover:bg-slate-600 dark:focus:bg-slate-600 border border-gray-300 dark:border-gray-600"
         >View More Info</NuxtLink
       >
