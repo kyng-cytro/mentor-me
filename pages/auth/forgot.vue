@@ -27,6 +27,8 @@ const handle_reset = async () => {
     redirectTo: "http://localhost:3000/auth/reset",
   });
 
+  console.log("Here");
+
   loading.value = false;
 
   if (error) {
@@ -75,6 +77,7 @@ const handle_reset = async () => {
             v-model="email"
             class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-800 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-slate-300 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             placeholder="john@doe.com"
+            autocomplete="email"
             required
           />
         </div>

@@ -7,13 +7,13 @@ const client = useSupabaseAuthClient();
 
 const user = useSupabaseUser();
 
-onMounted(() => {
-  watchEffect(async () => {
-    if (user.value) {
-      loading.value = false;
-      return navigateTo("/mentee");
-    }
-  });
+const route = useRoute();
+
+watchEffect(async () => {
+  if (user.value) {
+    loading.value = false;
+    return navigateTo((route.query.redirectTo as string) ?? "/mentee");
+  }
 });
 
 const loading = ref(false);
@@ -81,10 +81,12 @@ const handle_login = async () => {
           >
           <input
             type="email"
+            id="email"
             name="email"
             v-model="email"
             class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-800 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-slate-300 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             placeholder="john@doe.com"
+            autocomplete="email"
             required
           />
         </div>
@@ -97,6 +99,7 @@ const handle_login = async () => {
           <input
             type="password"
             name="password"
+            id="password"
             v-model="password"
             class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-800 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-slate-300 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             placeholder="••••••••"

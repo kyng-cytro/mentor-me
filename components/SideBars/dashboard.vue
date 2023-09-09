@@ -67,6 +67,11 @@ defineProps({
         v-if="userInfo?.role === 'MENTEE'"
       >
         <ButtonsNavButtons :full_width="true" to="/mentee" text="Dashboard" />
+        <ButtonsNavButtons
+          :full_width="true"
+          to="/mentee/mentors"
+          text="Mentors"
+        />
         <ButtonsNavButtons :full_width="true" to="/messages" text="Messages" />
         <ButtonsNavButtons :full_width="true" to="/settings" text="Settings" />
       </div>
