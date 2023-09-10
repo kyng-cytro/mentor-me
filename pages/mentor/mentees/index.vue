@@ -1,23 +1,23 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: "mentee",
+  middleware: "mentor",
 });
 
 const query = ref("");
 
 const {
-  data: mentors,
+  data: mentees,
   refresh,
   pending,
-} = await useFetch("/api/mentee/mentors", {
+} = await useFetch("/api/mentor/mentees", {
   lazy: true,
   headers: useRequestHeaders(["cookie"]) as Record<string, string>,
 });
 
 const results = useDebounce(
   computed(() => {
-    if (!mentors.value) return [];
-    return mentors.value.filter((item) =>
+    if (!mentees.value) return [];
+    return mentees.value.filter((item) =>
       item.user.name.toLowerCase().includes(query.value.toLowerCase()),
     );
   }),
@@ -45,16 +45,11 @@ const results = useDebounce(
           placeholder="Search..."
           required
         />
-        <NuxtLink
-          class="whitespace-nowrap rounded-lg bg-blue-600 p-2.5 text-center text-sm font-medium text-white transition-all duration-150 ease-in-out hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          to="/find-a-mentor"
-          >Find a Mentor</NuxtLink
-        >
       </div>
       <CardNormal
         :key="mentor.id"
         :full="true"
-        :to="`/mentee/mentors/${mentor.id}`"
+        :to="`/mentor/mentees/${mentor.id}`"
         :title="mentor.user.name"
         :subtitle="mentor.user.email"
         v-for="mentor in results"
@@ -65,7 +60,7 @@ const results = useDebounce(
       >
         <NuxtImg class="h-24 w-24" src="/images/not-found.png" placeholder />
         <p class="font-semibold text-md capitalize">
-          Have you found your mentor?
+          Have you tried accepting requests
         </p>
       </div>
     </Card>
