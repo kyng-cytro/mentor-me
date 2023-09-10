@@ -4,5 +4,5 @@ definePageMeta({
 });
 </script>
 <template>
-  <div>View mentor info and send request</div>
+  <div>Messaging and Join calls</div>
 </template>

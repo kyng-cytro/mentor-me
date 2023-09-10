@@ -144,7 +144,7 @@ const { data: response, pending } = useFetch("/api/mentor/all", {
           <CardMentorProfile
             :id="mentor.id"
             :name="mentor.user.name"
-            image-url="https://api.dicebear.com/7.x/icons/svg"
+            :image-url="`https://api.dicebear.com/5.x/initials/svg?seed=${mentor.user.name}`"
             :position="mentor.currentTitle"
             :company="mentor.companyName"
             :field="mentor.fieldOfExpertise"
