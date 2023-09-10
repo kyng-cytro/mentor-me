@@ -45,7 +45,7 @@ defineProps({
           class="mx-auto h-20 w-20 rounded-full"
           :src="
             userInfo?.profileImage ??
-            'https://api.dicebear.com/5.x/initials/svg?seed=jd'
+            `https://api.dicebear.com/5.x/initials/svg?seed=${userInfo?.name}`
           "
           placeholder
         />

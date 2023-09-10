@@ -22,15 +22,15 @@ defineProps({
         class="flex items-center justify-center border-4 w-full sm:w-auto rounded-lg sm:rounded-full border-blue-400"
       >
         <img
-          class="rounded-lg w-full h-32 sm:w-20 sm:h-20 sm:rounded-full"
+          class="rounded-lg w-full h-32 sm:w-20 sm:h-20 sm:rounded-full object-cover"
           :src="imageUrl"
           :alt="name"
         />
       </div>
 
-      <div class="flex flex-col">
+      <div class="w-full sm:w-auto flex flex-col">
         <NuxtLink
-          :to="`/mentee/view/${id}`"
+          :to="`/view/${id}`"
           class="text-xl font-semibold capitalize hover:underline"
           >{{ name }}</NuxtLink
         >
@@ -68,7 +68,7 @@ defineProps({
     <!-- Button -->
     <div>
       <NuxtLink
-        :to="`/mentee/view/${id}`"
+        :to="`/view/${id}`"
         class="rounded-md p-2 text-sm font-medium duration-300 ease-in-out hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:hover:bg-slate-600 dark:focus:bg-slate-600 border border-gray-300 dark:border-gray-600"
         >View More Info</NuxtLink
       >
