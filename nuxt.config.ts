@@ -45,7 +45,14 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: "/auth",
       callback: "/auth/confirm",
-      exclude: ["/", "/become-a-mentor", "/find-a-mentor", "/live-sessions"],
+      exclude: [
+        "/",
+        "/auth/forgot",
+        "/auth/signup",
+        "/become-a-mentor",
+        "/find-a-mentor",
+        "/live-sessions",
+      ],
     },
   },
 

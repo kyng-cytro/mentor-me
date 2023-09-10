@@ -3,9 +3,7 @@ definePageMeta({
   layout: "auth",
 });
 
-const route = useRoute();
-
-const { mentor } = route.query;
+const mentor = ref(false);
 
 const client = useSupabaseClient();
 
@@ -55,7 +53,7 @@ const handle_create = async () => {
   const { error } = await client.auth.signUp({
     email: email.value,
     password: password.value,
-    options: { data: { mentor: mentor ? true : false } },
+    options: { data: { mentor: mentor.value } },
   });
 
   if (error) {
@@ -125,6 +123,7 @@ const handle_create = async () => {
             v-model="phone"
             class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-800 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-slate-300 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             placeholder="+2348012345678"
+            autocomplete="mobile"
             required
           />
         </div>
@@ -160,6 +159,21 @@ const handle_create = async () => {
             required
           />
         </div>
+        <div class="mb-6">
+          <input
+            id="checkbox-mentor"
+            name="checkbox-mentor"
+            type="checkbox"
+            v-model="mentor"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          />
+          <label
+            for="checkbox-mentor"
+            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Looking to be a mentor?</label
+          >
+        </div>
+
         <div class="mb-4 flex flex-col items-center gap-3 sm:flex-row">
           <ButtonsLoading
             text="Create your account"

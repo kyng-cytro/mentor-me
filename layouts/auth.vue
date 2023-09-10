@@ -168,10 +168,6 @@ const { data } = storeToRefs(modalStore);
   <div
     class="font-Nunito relative flex h-full min-h-screen flex-col bg-white text-black dark:bg-slate-800 dark:text-white md:h-screen"
   >
-    <Transition name="fade">
-      <ModalsLogin ref="loginModal" v-show="data.LOGIN" />
-    </Transition>
-
     <!-- Nav Bar -->
     <NavbarsLanding @click.ctrl="toggleDark()" />
 

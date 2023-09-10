@@ -1,20 +1,15 @@
 <script setup lang="ts">
-import { useModalStore } from "~/stores/modalStore";
-
-const modalStore = useModalStore();
-
-const showLogin = () => {
-  modalStore.hide("NAVIGATION");
-  modalStore.show("LOGIN");
+const toLogin = () => {
+  return navigateTo("/auth");
 };
 </script>
 
 <template>
-  <section
-    class="relative bg-slate-700 "
-  >
-    <Particles/>
-    <div class="relative z-20 mx-auto max-w-screen-xl px-4 py-24 text-center lg:py-56">
+  <section class="relative bg-slate-700">
+    <Particles />
+    <div
+      class="relative z-20 mx-auto max-w-screen-xl px-4 py-24 text-center lg:py-56"
+    >
       <h1
         class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-6xl"
       >
@@ -30,7 +25,7 @@ const showLogin = () => {
       <div
         class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-x-4 sm:space-y-0"
       >
-        <ButtonsSlot @click="showLogin">
+        <ButtonsSlot @click="toLogin">
           Get started
           <svg
             aria-hidden="true"

@@ -31,7 +31,7 @@ const results = useDebounce(
     <Card
       class="relative col-span-1 row-span-1"
       :show_title="true"
-      title="My Mentors"
+      title="My Mentees"
       :show_refresh="true"
       :refreshing="pending"
       @refresh="refresh"
