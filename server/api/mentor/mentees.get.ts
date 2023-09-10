@@ -14,8 +14,8 @@ export default eventHandler(async (event) => {
   }
 
   try {
-    return prisma.mentor.findMany({
-      where: { mentees: { some: { user: { id: user.id } } } },
+    return prisma.mentee.findMany({
+      where: { mentors: { some: { user: { id: user.id } } } },
       include: { user: true },
     });
   } catch (e) {

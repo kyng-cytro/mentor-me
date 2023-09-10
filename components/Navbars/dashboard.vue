@@ -124,7 +124,7 @@ defineProps({
         </div>
 
         <div
-          class="flex flex-col items-center space-y-3"
+          class="w-full flex flex-col items-center space-y-3"
           v-if="userInfo?.role === 'MENTOR'"
         >
           <ButtonsNavButtons

@@ -1,8 +1,4 @@
-<script setup lang="ts">
-definePageMeta({
-  middleware: "mentee",
-});
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div>Tasks</div>
