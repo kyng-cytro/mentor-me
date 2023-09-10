@@ -4,5 +4,5 @@ definePageMeta({
 });
 </script>
 <template>
-  <div>Hello</div>
+  <div>Messaging and Join calls</div>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: "mentor",
+  middleware: "mentee",
 });
 </script>
 <template>
