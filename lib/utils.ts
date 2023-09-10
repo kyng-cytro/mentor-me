@@ -112,7 +112,7 @@ export const dashboardItemsMentee = [
 ];
 
 export const dashboardItemsMentor = [
-  { url: "/mentee", text: "Dashboard" },
+  { url: "/mentor", text: "Dashboard" },
   { url: "/tasks", text: "Tasks" },
   { url: "/mentor/mentees", text: "Mentees" },
   { url: "/settings", text: "Settings" },

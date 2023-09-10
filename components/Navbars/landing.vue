@@ -5,7 +5,6 @@ import { useModalStore } from "~/stores/modalStore";
 
 // TODO: remove temp
 const user = useSupabaseUser();
-const client = useSupabaseClient();
 
 const modalStore = useModalStore();
 
@@ -19,14 +18,14 @@ const showNav = () => {
   modalStore.show("NAVIGATION");
 };
 
-const showLogin = () => {
+const toLogin = () => {
   hideNav();
-  modalStore.show("LOGIN");
+  return navigateTo("/auth");
 };
 
-const handleLogout = async () => {
-  await client.auth.signOut();
-  return navigateTo("/");
+const toDashboard = async () => {
+  if (user.value?.user_metadata.mentor) return navigateTo("/mentor");
+  return navigateTo("/mentee");
 };
 </script>
 
@@ -106,7 +105,7 @@ const handleLogout = async () => {
       <div class="flex items-center gap-3 md:hidden">
         <div v-if="!user">
           <ButtonsNormal
-            @click="showLogin"
+            @click="toLogin"
             text="Get Started"
             :secondary="true"
           />
@@ -114,8 +113,8 @@ const handleLogout = async () => {
         <!-- TODO: remove temp -->
         <div v-else>
           <ButtonsNormal
-            @click="handleLogout"
-            text="Logout"
+            @click="toDashboard"
+            text="Dashboard"
             :secondary="true"
           />
         </div>
@@ -180,7 +179,7 @@ const handleLogout = async () => {
         <!-- Get started Button -->
         <div v-if="!user">
           <ButtonsNormal
-            @click="showLogin"
+            @click="toLogin"
             text="Get Started"
             :secondary="true"
           />
@@ -188,8 +187,8 @@ const handleLogout = async () => {
         <!-- TODO: remove temp -->
         <div v-else>
           <ButtonsNormal
-            @click="handleLogout"
-            text="Logout"
+            @click="toDashboard"
+            text="Dashboard"
             :secondary="true"
           />
         </div>

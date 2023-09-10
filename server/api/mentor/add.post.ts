@@ -33,6 +33,7 @@ export default eventHandler(async (event) => {
             fieldOfExpertise: data.career_info.fieldOfExpertise,
             yearsOfExperience: data.career_info.yearsOfExperience,
             description: data.basic_info.description,
+            rating: 1,
           },
         },
       },
