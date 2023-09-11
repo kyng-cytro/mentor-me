@@ -13,18 +13,8 @@ import "vue-multiselect/dist/vue-multiselect.css";
 import { mentorBasicInfoSchema } from "~/lib/schemas";
 import { fieldOfExpertise, weekDays } from "~/lib/utils";
 
-const user = useSupabaseUser();
-const client = useSupabaseClient();
 const isDark = useDark();
 const loading = ref(false);
-
-// NOTE: Sends guest back to login page
-onMounted(async () => {
-  if (!user.value) {
-    await client.auth.signOut();
-    navigateTo("/auth");
-  }
-});
 
 // NOTE: Form Data
 const formData = reactive({
@@ -488,6 +478,7 @@ const removeSlot = (index: number) => {
                       :input-class-name="
                         isDark ? 'custom-picker-dark' : 'custom-picker-light'
                       "
+                      :is-24="false"
                       time-picker
                       range
                       auto-apply

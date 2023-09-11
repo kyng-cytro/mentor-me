@@ -116,6 +116,7 @@ defineProps({
         >
           <ButtonsNavButtons
             @click="hideNav"
+            :key="item.text"
             :full_width="true"
             :to="item.url"
             :text="item.text"
@@ -129,6 +130,7 @@ defineProps({
         >
           <ButtonsNavButtons
             @click="hideNav"
+            :key="item.text"
             :full_width="true"
             :to="item.url"
             :text="item.text"

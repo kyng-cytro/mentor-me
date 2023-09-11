@@ -142,6 +142,7 @@ const { data: response, pending } = useFetch("/api/mentor/all", {
         >
           <SearchNotFound v-if="!response?.mentors.length" />
           <CardMentorProfile
+            :key="mentor.id"
             :id="mentor.id"
             :name="mentor.user.name"
             :image-url="`https://api.dicebear.com/5.x/initials/svg?seed=${mentor.user.name}`"

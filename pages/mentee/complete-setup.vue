@@ -17,18 +17,8 @@ import "@vuepic/vue-datepicker/dist/main.css";
 import VueMultiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.css";
 
-const user = useSupabaseUser();
-const client = useSupabaseClient();
 const isDark = useDark();
 const loading = ref(false);
-
-// NOTE: Sends guest back to login page
-onMounted(async () => {
-  if (!user.value) {
-    await client.auth.signOut();
-    navigateTo("/auth");
-  }
-});
 
 // NOTE: Form Data
 const formData = reactive({

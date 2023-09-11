@@ -170,6 +170,7 @@ const toDashboard = async () => {
         <!-- Nav Button -->
         <div class="flex items-center gap-6">
           <NavbarsNavLink
+            :key="link.text"
             :to="link.url"
             class="block rounded p-2 duration-300 ease-in-out hover:text-blue-500 focus:appearance-none focus:text-blue-500 dark:hover:text-blue-600 dark:focus:text-blue-600"
             v-for="link in landingItems"
@@ -203,6 +204,7 @@ const toDashboard = async () => {
       >
         <NavbarsNavLinkMobile
           @click="hideNav"
+          :key="link.text"
           :to="link.url"
           class="w-full rounded border border-slate-300 p-2 duration-300 ease-in-out hover:bg-blue-500 hover:text-white focus:appearance-none focus:bg-blue-500 focus:text-white dark:border-slate-600 dark:hover:bg-blue-600 dark:focus:bg-blue-600"
           v-for="link in landingItems"
