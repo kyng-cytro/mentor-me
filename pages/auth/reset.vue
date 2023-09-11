@@ -54,13 +54,13 @@ const handle_reset = async () => {
       >
         Reset Password
       </h2>
-      <p
-        class="mb-2 w-full max-w-sm text-left text-sm font-light text-red-500 sm:max-w-md"
-        v-if="reset_error.status"
-      >
-        {{ reset_error.message }}
-      </p>
-
+      <div class="w-full max-w-sm sm:max-w-md">
+        <Alerts
+          :text="reset_error.message"
+          type="error"
+          v-if="reset_error.status"
+        />
+      </div>
       <form class="w-full max-w-sm sm:max-w-md" @submit.prevent="handle_reset">
         <div class="mb-6">
           <label

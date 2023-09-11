@@ -48,19 +48,16 @@ const handle_reset = async () => {
       >
         Forgot Password
       </h2>
-      <p
-        class="mb-2 w-full max-w-sm text-left text-sm font-light text-red-500 sm:max-w-md"
-        v-if="forgot_error.status"
-      >
-        {{ forgot_error.message }}
-      </p>
-      <p
-        class="mb-2 w-full max-w-sm text-left text-sm font-light text-green-500 sm:max-w-md"
-        v-if="success"
-      >
-        Please check your inbox
-      </p>
-
+      <div class="w-full max-w-sm sm:max-w-md">
+        <Alerts
+          :text="forgot_error.message"
+          type="error"
+          v-if="forgot_error.status"
+        />
+      </div>
+      <div class="w-full max-w-sm sm:max-w-md">
+        <Alerts text="Please check your inbox" type="success" v-if="success" />
+      </div>
       <form class="w-full max-w-sm sm:max-w-md" @submit.prevent="handle_reset">
         <div class="mb-6">
           <label
