@@ -48,18 +48,19 @@ model Mentor {
 }
 
 model Mentee {
-  id               String     @id @default(cuid())
-  educationLevel   String     @map("education_level")
-  careerGoals      String     @map("career_goals")
-  careerHistory    String     @map("career_history")
-  careerChallenges String     @map("career_challenges")
+  id               String        @id @default(cuid())
+  educationLevel   String        @map("education_level")
+  careerGoals      String        @map("career_goals")
+  careerHistory    String        @map("career_history")
+  careerChallenges String        @map("career_challenges")
   skills           String[]
   bio              String
   dob              DateTime
-  user             User       @relation(fields: [userId], references: [id])
+  user             User          @relation(fields: [userId], references: [id])
   userId           String
   mentors          Mentor[]
   meetings         Meetings[]
+  reviews          Testimonial[]
 }
 
 model Meetings {
@@ -80,14 +81,17 @@ model Testimonial {
   content   String
   mentor    Mentor?  @relation(fields: [mentorId], references: [id])
   mentorId  String?
+  mentee    Mentee?  @relation(fields: [menteeId], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  menteeId  String?
 }
 
 model Availability {
   id        String   @id @default(cuid())
   dayOfWeek String   @map("day_of_week")
-  times     String[]
+  startTime String   @map("start_time")
+  endTime   String   @map("end_time")
   mentor    Mentor?  @relation(fields: [mentorId], references: [id])
   mentorId  String?
   createdAt DateTime @default(now()) @map("created_at")

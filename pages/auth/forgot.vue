@@ -8,12 +8,12 @@ const client = useSupabaseClient();
 const loading = ref(false);
 const email = ref("");
 
-const login_error = ref({ status: false, message: "" });
+const forgot_error = ref({ status: false, message: "" });
 
 const success = ref(false);
 
 const reset = () => {
-  login_error.value = { status: false, message: "" };
+  forgot_error.value = { status: false, message: "" };
   success.value = false;
 };
 
@@ -30,7 +30,7 @@ const handle_reset = async () => {
   loading.value = false;
 
   if (error) {
-    return (login_error.value = { status: true, message: error.message });
+    return (forgot_error.value = { status: true, message: error.message });
   }
 
   return (success.value = true);
@@ -50,9 +50,9 @@ const handle_reset = async () => {
       </h2>
       <p
         class="mb-2 w-full max-w-sm text-left text-sm font-light text-red-500 sm:max-w-md"
-        v-if="login_error.status"
+        v-if="forgot_error.status"
       >
-        {{ login_error.message }}
+        {{ forgot_error.message }}
       </p>
       <p
         class="mb-2 w-full max-w-sm text-left text-sm font-light text-green-500 sm:max-w-md"

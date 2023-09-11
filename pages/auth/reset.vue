@@ -9,7 +9,7 @@ const user = useSupabaseUser();
 
 const loading = ref(false);
 
-const login_error = ref({ status: false, message: "" });
+const reset_error = ref({ status: false, message: "" });
 
 const new_password = ref("");
 
@@ -17,7 +17,7 @@ const confirm_password = ref("");
 
 const handle_reset = async () => {
   if (new_password.value !== confirm_password.value)
-    return (login_error.value = {
+    return (reset_error.value = {
       status: true,
       message: "Passwords do not match",
     });
@@ -31,7 +31,7 @@ const handle_reset = async () => {
   loading.value = false;
 
   if (error) {
-    return (login_error.value = { status: true, message: error.message });
+    return (reset_error.value = { status: true, message: error.message });
   }
 
   watchEffect(() => {
@@ -56,9 +56,9 @@ const handle_reset = async () => {
       </h2>
       <p
         class="mb-2 w-full max-w-sm text-left text-sm font-light text-red-500 sm:max-w-md"
-        v-if="login_error.status"
+        v-if="reset_error.status"
       >
-        {{ login_error.message }}
+        {{ reset_error.message }}
       </p>
 
       <form class="w-full max-w-sm sm:max-w-md" @submit.prevent="handle_reset">

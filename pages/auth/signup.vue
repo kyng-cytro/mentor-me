@@ -32,15 +32,15 @@ const phone = ref();
 const password = ref("");
 const confirm_password = ref("");
 
-const login_error = ref({ status: false, message: "" });
+const signup_error = ref({ status: false, message: "" });
 
 const reset = () => {
-  login_error.value = { status: false, message: "" };
+  signup_error.value = { status: false, message: "" };
 };
 
 const handle_create = async () => {
   if (confirm_password.value != password.value) {
-    return (login_error.value = {
+    return (signup_error.value = {
       status: true,
       message: "Password and Confim Password should be the same",
     });
@@ -58,7 +58,7 @@ const handle_create = async () => {
 
   if (error) {
     loading.value = false;
-    return (login_error.value = { status: true, message: error.message });
+    return (signup_error.value = { status: true, message: error.message });
   }
 
   const { error: updateError } = await client.auth.updateUser({
@@ -67,7 +67,7 @@ const handle_create = async () => {
 
   if (updateError) {
     loading.value = false;
-    return (login_error.value = {
+    return (signup_error.value = {
       status: true,
       message: updateError.message,
     });
@@ -88,9 +88,9 @@ const handle_create = async () => {
       </h2>
       <p
         class="mb-2 w-full max-w-sm text-left text-sm font-light text-red-500 sm:max-w-md"
-        v-if="login_error.status"
+        v-if="signup_error.status"
       >
-        {{ login_error.message }}
+        {{ signup_error.message }}
       </p>
       <form class="w-full max-w-sm sm:max-w-md" @submit.prevent="handle_create">
         <div class="mb-6">

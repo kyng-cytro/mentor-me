@@ -18,6 +18,14 @@ export default eventHandler(async (event) => {
   const data = await zh.useValidatedBody(event, mentorFormDataSchema);
 
   try {
+    const availabilities = data.availability.map((item) => {
+      return {
+        dayOfWeek: item.day,
+        startTime: `${item.time_range[0].hours}:${item.time_range[0].minutes}`,
+        endTime: `${item.time_range[1].hours}:${item.time_range[1].minutes}`,
+      };
+    });
+
     return await prisma.user.create({
       data: {
         id: user.id,
@@ -34,11 +42,18 @@ export default eventHandler(async (event) => {
             yearsOfExperience: data.career_info.yearsOfExperience,
             description: data.basic_info.description,
             rating: 1,
+            availabilities: {
+              createMany: {
+                data: availabilities,
+                skipDuplicates: true,
+              },
+            },
           },
         },
       },
     });
-  } catch {
+  } catch (e) {
+    console.error(e);
     throw createError({
       statusCode: 400,
       message: "Something Went Wronng",

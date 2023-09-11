@@ -41,15 +41,13 @@ defineProps({
       <!-- Image, Name & Role -->
 
       <div class="space-y-4">
-        <NuxtImg
+        <img
           class="mx-auto h-20 w-20 rounded-full"
           :src="
             userInfo?.profileImage ??
             `https://api.dicebear.com/5.x/initials/svg?seed=${userInfo?.name}`
           "
-          placeholder
         />
-
         <div class="space-y-1 text-center">
           <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-400">
             {{ userInfo?.name }}
@@ -69,6 +67,7 @@ defineProps({
         v-if="userInfo?.role === 'MENTEE'"
       >
         <ButtonsNavButtons
+          :key="item.text"
           :full_width="true"
           :to="item.url"
           :text="item.text"
@@ -80,6 +79,7 @@ defineProps({
         v-if="userInfo?.role === 'MENTOR'"
       >
         <ButtonsNavButtons
+          :key="item.text"
           :full_width="true"
           :to="item.url"
           :text="item.text"
