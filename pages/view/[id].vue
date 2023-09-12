@@ -1,19 +1,84 @@
 <script setup lang="ts">
+const user = useSupabaseUser();
+
 const { id } = useRoute().params;
 
-const { data: mentor } = useFetch("/api/mentor/mentor", {
+const { data: mentor, refresh } = useFetch("/api/mentor/mentor", {
   query: { id },
 });
 
 const opened_report = ref("");
 
-const loading = ref(true);
+const loading = ref(false);
+
+const request_error = ref({ status: false, message: "" });
 
 const updateOpened = (id: string) => {
   opened_report.value = id;
 };
 
-const handle_request = async () => {};
+const handle_request = async () => {
+  request_error.value = { status: false, message: "" };
+
+  loading.value = true;
+
+  const { error } = await useFetch("/api/requests/add", {
+    method: "POST",
+    body: { id },
+  });
+
+  loading.value = false;
+
+  if (error.value) {
+    return (request_error.value = {
+      status: true,
+      message: error.value.data.message ?? "Something went wrong",
+    });
+  }
+
+  await refresh();
+};
+
+const has_pending = computed(() => {
+  if (!mentor.value) return false;
+  if (!user.value) return false;
+
+  if (
+    mentor.value.requests.find(
+      (request) =>
+        request.mentee?.userId === user.value?.id &&
+        request.status === "PENDING",
+    )
+  ) {
+    return true;
+  }
+  return false;
+});
+
+const can_request = computed(() => {
+  if (!mentor.value) return false;
+  if (!user.value) return false;
+
+  if (user.value.user_metadata.mentor) {
+    return false;
+  }
+
+  if (
+    mentor.value.requests.find(
+      (request) =>
+        request.mentee?.userId === user.value?.id &&
+        request.status === "DECLINED",
+    )
+  ) {
+    return false;
+  }
+
+  if (mentor.value.mentees.find((mentee) => mentee.userId === user.value?.id)) {
+    return false;
+  }
+
+  return true;
+});
 </script>
 <template>
   <div
@@ -87,13 +152,24 @@ const handle_request = async () => {};
           </button>
         </div>
 
+        <Alerts
+          type="error"
+          :text="request_error.message"
+          v-if="request_error.status"
+        />
         <!-- Request Mentorship -->
-        <div class="flex items-center">
+        <div class="flex items-center" v-if="!has_pending && can_request">
           <ButtonsLoading
             @click="handle_request"
             :loading="loading"
-            :secondary="true"
             text="Request Mentorship"
+          />
+        </div>
+        <div class="flex items-center" v-if="has_pending">
+          <Alerts
+            class="w-full"
+            type="success"
+            text="You have a pending request for this mentor"
           />
         </div>
       </ContainersScrollY>

@@ -42,6 +42,7 @@ model Mentor {
   user              User           @relation(fields: [userId], references: [id])
   userId            String
   mentees           Mentee[]
+  requests          Request[]
   meetings          Meetings[]
   testimonials      Testimonial[]
   availabilities    Availability[]
@@ -59,6 +60,7 @@ model Mentee {
   user             User          @relation(fields: [userId], references: [id])
   userId           String
   mentors          Mentor[]
+  requests         Request[]
   meetings         Meetings[]
   reviews          Testimonial[]
 }
@@ -96,6 +98,25 @@ model Availability {
   mentorId  String?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model Request {
+  id        String        @id @default(cuid())
+  status    RequestStatus @default(PENDING)
+  mentee    Mentee?       @relation(fields: [menteeId], references: [id])
+  menteeId  String?
+  mentor    Mentor?       @relation(fields: [mentorId], references: [id])
+  mentorId  String?
+  createdAt DateTime      @default(now()) @map("created_at")
+  updatedAt DateTime      @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([mentorId, menteeId])
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  DECLINED
 }
 
 enum Role {

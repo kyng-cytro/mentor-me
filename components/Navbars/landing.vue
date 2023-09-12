@@ -3,7 +3,6 @@ import { storeToRefs } from "pinia";
 import { landingItems } from "~/lib/utils";
 import { useModalStore } from "~/stores/modalStore";
 
-// TODO: remove temp
 const user = useSupabaseUser();
 
 const modalStore = useModalStore();
@@ -185,7 +184,6 @@ const toDashboard = async () => {
             :secondary="true"
           />
         </div>
-        <!-- TODO: remove temp -->
         <div v-else>
           <ButtonsNormal
             @click="toDashboard"

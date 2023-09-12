@@ -39,7 +39,8 @@ export default eventHandler(async (event) => {
         },
       },
     });
-  } catch {
+  } catch (e) {
+    console.error(e);
     throw createError({
       statusCode: 400,
       message: "Something Went Wronng",
