@@ -24,7 +24,13 @@ export default eventHandler(async (event) => {
           include: { mentee: { select: { user: { select: { name: true } } } } },
         },
         availabilities: true,
-        mentees: { select: { _count: true } },
+        mentees: { select: { id: true, userId: true } },
+        requests: {
+          select: {
+            mentee: { select: { id: true, userId: true } },
+            status: true,
+          },
+        },
       },
     });
   } catch (e) {

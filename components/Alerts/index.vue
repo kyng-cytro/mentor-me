@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ text: string; type: "error" | "success" }>();
+defineProps<{ text: string; type: "error" | "success" | "warning" }>();
 </script>
 
 <template>
@@ -8,6 +8,7 @@ defineProps<{ text: string; type: "error" | "success" }>();
     :class="{
       'bg-red-50 text-red-800 dark:text-red-400 ': type === 'error',
       'bg-green-50 text-green-800 dark:text-green-400': type === 'success',
+      'bg-orange-50 text-orange-800 dark:text-orange-400': type === 'warning',
     }"
     role="alert"
   >

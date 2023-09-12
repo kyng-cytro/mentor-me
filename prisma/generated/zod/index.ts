@@ -24,6 +24,8 @@ export const TestimonialScalarFieldEnumSchema = z.enum(['id','content','mentorId
 
 export const AvailabilityScalarFieldEnumSchema = z.enum(['id','dayOfWeek','startTime','endTime','mentorId','createdAt','updatedAt']);
 
+export const RequestScalarFieldEnumSchema = z.enum(['id','status','menteeId','mentorId','createdAt','updatedAt']);
+
 export const SortOrderSchema = z.enum(['asc','desc']);
 
 export const QueryModeSchema = z.enum(['default','insensitive']);
@@ -41,6 +43,12 @@ export const MeetingsOrderByRelevanceFieldEnumSchema = z.enum(['id','mentorId','
 export const TestimonialOrderByRelevanceFieldEnumSchema = z.enum(['id','content','mentorId','menteeId']);
 
 export const AvailabilityOrderByRelevanceFieldEnumSchema = z.enum(['id','dayOfWeek','startTime','endTime','mentorId']);
+
+export const RequestOrderByRelevanceFieldEnumSchema = z.enum(['id','menteeId','mentorId']);
+
+export const RequestStatusSchema = z.enum(['PENDING','APPROVED','DECLINED']);
+
+export type RequestStatusType = `${z.infer<typeof RequestStatusSchema>}`
 
 export const RoleSchema = z.enum(['MENTOR','MENTEE','ADMIN']);
 
@@ -154,6 +162,21 @@ export const AvailabilitySchema = z.object({
 export type Availability = z.infer<typeof AvailabilitySchema>
 
 /////////////////////////////////////////
+// REQUEST SCHEMA
+/////////////////////////////////////////
+
+export const RequestSchema = z.object({
+  status: RequestStatusSchema,
+  id: z.string().cuid(),
+  menteeId: z.string().nullable(),
+  mentorId: z.string().nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type Request = z.infer<typeof RequestSchema>
+
+/////////////////////////////////////////
 // SELECT & INCLUDE
 /////////////////////////////////////////
 
@@ -202,6 +225,7 @@ export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z.object({
 export const MentorIncludeSchema: z.ZodType<Prisma.MentorInclude> = z.object({
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   mentees: z.union([z.boolean(),z.lazy(() => MenteeFindManyArgsSchema)]).optional(),
+  requests: z.union([z.boolean(),z.lazy(() => RequestFindManyArgsSchema)]).optional(),
   meetings: z.union([z.boolean(),z.lazy(() => MeetingsFindManyArgsSchema)]).optional(),
   testimonials: z.union([z.boolean(),z.lazy(() => TestimonialFindManyArgsSchema)]).optional(),
   availabilities: z.union([z.boolean(),z.lazy(() => AvailabilityFindManyArgsSchema)]).optional(),
@@ -219,6 +243,7 @@ export const MentorCountOutputTypeArgsSchema: z.ZodType<Prisma.MentorCountOutput
 
 export const MentorCountOutputTypeSelectSchema: z.ZodType<Prisma.MentorCountOutputTypeSelect> = z.object({
   mentees: z.boolean().optional(),
+  requests: z.boolean().optional(),
   meetings: z.boolean().optional(),
   testimonials: z.boolean().optional(),
   availabilities: z.boolean().optional(),
@@ -236,6 +261,7 @@ export const MentorSelectSchema: z.ZodType<Prisma.MentorSelect> = z.object({
   userId: z.boolean().optional(),
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   mentees: z.union([z.boolean(),z.lazy(() => MenteeFindManyArgsSchema)]).optional(),
+  requests: z.union([z.boolean(),z.lazy(() => RequestFindManyArgsSchema)]).optional(),
   meetings: z.union([z.boolean(),z.lazy(() => MeetingsFindManyArgsSchema)]).optional(),
   testimonials: z.union([z.boolean(),z.lazy(() => TestimonialFindManyArgsSchema)]).optional(),
   availabilities: z.union([z.boolean(),z.lazy(() => AvailabilityFindManyArgsSchema)]).optional(),
@@ -248,6 +274,7 @@ export const MentorSelectSchema: z.ZodType<Prisma.MentorSelect> = z.object({
 export const MenteeIncludeSchema: z.ZodType<Prisma.MenteeInclude> = z.object({
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   mentors: z.union([z.boolean(),z.lazy(() => MentorFindManyArgsSchema)]).optional(),
+  requests: z.union([z.boolean(),z.lazy(() => RequestFindManyArgsSchema)]).optional(),
   meetings: z.union([z.boolean(),z.lazy(() => MeetingsFindManyArgsSchema)]).optional(),
   reviews: z.union([z.boolean(),z.lazy(() => TestimonialFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => MenteeCountOutputTypeArgsSchema)]).optional(),
@@ -264,6 +291,7 @@ export const MenteeCountOutputTypeArgsSchema: z.ZodType<Prisma.MenteeCountOutput
 
 export const MenteeCountOutputTypeSelectSchema: z.ZodType<Prisma.MenteeCountOutputTypeSelect> = z.object({
   mentors: z.boolean().optional(),
+  requests: z.boolean().optional(),
   meetings: z.boolean().optional(),
   reviews: z.boolean().optional(),
 }).strict();
@@ -280,6 +308,7 @@ export const MenteeSelectSchema: z.ZodType<Prisma.MenteeSelect> = z.object({
   userId: z.boolean().optional(),
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   mentors: z.union([z.boolean(),z.lazy(() => MentorFindManyArgsSchema)]).optional(),
+  requests: z.union([z.boolean(),z.lazy(() => RequestFindManyArgsSchema)]).optional(),
   meetings: z.union([z.boolean(),z.lazy(() => MeetingsFindManyArgsSchema)]).optional(),
   reviews: z.union([z.boolean(),z.lazy(() => TestimonialFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => MenteeCountOutputTypeArgsSchema)]).optional(),
@@ -355,6 +384,30 @@ export const AvailabilitySelectSchema: z.ZodType<Prisma.AvailabilitySelect> = z.
   mentorId: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
+  mentor: z.union([z.boolean(),z.lazy(() => MentorArgsSchema)]).optional(),
+}).strict()
+
+// REQUEST
+//------------------------------------------------------
+
+export const RequestIncludeSchema: z.ZodType<Prisma.RequestInclude> = z.object({
+  mentee: z.union([z.boolean(),z.lazy(() => MenteeArgsSchema)]).optional(),
+  mentor: z.union([z.boolean(),z.lazy(() => MentorArgsSchema)]).optional(),
+}).strict()
+
+export const RequestArgsSchema: z.ZodType<Prisma.RequestArgs> = z.object({
+  select: z.lazy(() => RequestSelectSchema).optional(),
+  include: z.lazy(() => RequestIncludeSchema).optional(),
+}).strict();
+
+export const RequestSelectSchema: z.ZodType<Prisma.RequestSelect> = z.object({
+  id: z.boolean().optional(),
+  status: z.boolean().optional(),
+  menteeId: z.boolean().optional(),
+  mentorId: z.boolean().optional(),
+  createdAt: z.boolean().optional(),
+  updatedAt: z.boolean().optional(),
+  mentee: z.union([z.boolean(),z.lazy(() => MenteeArgsSchema)]).optional(),
   mentor: z.union([z.boolean(),z.lazy(() => MentorArgsSchema)]).optional(),
 }).strict()
 
@@ -450,6 +503,7 @@ export const MentorWhereInputSchema: z.ZodType<Prisma.MentorWhereInput> = z.obje
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   mentees: z.lazy(() => MenteeListRelationFilterSchema).optional(),
+  requests: z.lazy(() => RequestListRelationFilterSchema).optional(),
   meetings: z.lazy(() => MeetingsListRelationFilterSchema).optional(),
   testimonials: z.lazy(() => TestimonialListRelationFilterSchema).optional(),
   availabilities: z.lazy(() => AvailabilityListRelationFilterSchema).optional()
@@ -467,6 +521,7 @@ export const MentorOrderByWithRelationAndSearchRelevanceInputSchema: z.ZodType<P
   userId: z.lazy(() => SortOrderSchema).optional(),
   user: z.lazy(() => UserOrderByWithRelationAndSearchRelevanceInputSchema).optional(),
   mentees: z.lazy(() => MenteeOrderByRelationAggregateInputSchema).optional(),
+  requests: z.lazy(() => RequestOrderByRelationAggregateInputSchema).optional(),
   meetings: z.lazy(() => MeetingsOrderByRelationAggregateInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialOrderByRelationAggregateInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityOrderByRelationAggregateInputSchema).optional(),
@@ -524,6 +579,7 @@ export const MenteeWhereInputSchema: z.ZodType<Prisma.MenteeWhereInput> = z.obje
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   mentors: z.lazy(() => MentorListRelationFilterSchema).optional(),
+  requests: z.lazy(() => RequestListRelationFilterSchema).optional(),
   meetings: z.lazy(() => MeetingsListRelationFilterSchema).optional(),
   reviews: z.lazy(() => TestimonialListRelationFilterSchema).optional()
 }).strict();
@@ -540,6 +596,7 @@ export const MenteeOrderByWithRelationAndSearchRelevanceInputSchema: z.ZodType<P
   userId: z.lazy(() => SortOrderSchema).optional(),
   user: z.lazy(() => UserOrderByWithRelationAndSearchRelevanceInputSchema).optional(),
   mentors: z.lazy(() => MentorOrderByRelationAggregateInputSchema).optional(),
+  requests: z.lazy(() => RequestOrderByRelationAggregateInputSchema).optional(),
   meetings: z.lazy(() => MeetingsOrderByRelationAggregateInputSchema).optional(),
   reviews: z.lazy(() => TestimonialOrderByRelationAggregateInputSchema).optional(),
   _relevance: z.lazy(() => MenteeOrderByRelevanceInputSchema).optional()
@@ -751,6 +808,61 @@ export const AvailabilityScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
 
+export const RequestWhereInputSchema: z.ZodType<Prisma.RequestWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => RequestWhereInputSchema),z.lazy(() => RequestWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => RequestWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => RequestWhereInputSchema),z.lazy(() => RequestWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  status: z.union([ z.lazy(() => EnumRequestStatusFilterSchema),z.lazy(() => RequestStatusSchema) ]).optional(),
+  menteeId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  mentorId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  mentee: z.union([ z.lazy(() => MenteeRelationFilterSchema),z.lazy(() => MenteeWhereInputSchema) ]).optional().nullable(),
+  mentor: z.union([ z.lazy(() => MentorRelationFilterSchema),z.lazy(() => MentorWhereInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const RequestOrderByWithRelationAndSearchRelevanceInputSchema: z.ZodType<Prisma.RequestOrderByWithRelationAndSearchRelevanceInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  status: z.lazy(() => SortOrderSchema).optional(),
+  menteeId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  mentorId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  mentee: z.lazy(() => MenteeOrderByWithRelationAndSearchRelevanceInputSchema).optional(),
+  mentor: z.lazy(() => MentorOrderByWithRelationAndSearchRelevanceInputSchema).optional(),
+  _relevance: z.lazy(() => RequestOrderByRelevanceInputSchema).optional()
+}).strict();
+
+export const RequestWhereUniqueInputSchema: z.ZodType<Prisma.RequestWhereUniqueInput> = z.object({
+  id: z.string().cuid().optional(),
+  mentorId_menteeId: z.lazy(() => RequestMentorIdMenteeIdCompoundUniqueInputSchema).optional()
+}).strict();
+
+export const RequestOrderByWithAggregationInputSchema: z.ZodType<Prisma.RequestOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  status: z.lazy(() => SortOrderSchema).optional(),
+  menteeId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  mentorId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => RequestCountOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => RequestMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => RequestMinOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const RequestScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.RequestScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => RequestScalarWhereWithAggregatesInputSchema),z.lazy(() => RequestScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => RequestScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => RequestScalarWhereWithAggregatesInputSchema),z.lazy(() => RequestScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  status: z.union([ z.lazy(() => EnumRequestStatusWithAggregatesFilterSchema),z.lazy(() => RequestStatusSchema) ]).optional(),
+  menteeId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  mentorId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+  updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+}).strict();
+
 export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.object({
   id: z.string().cuid().optional(),
   name: z.string(),
@@ -861,6 +973,7 @@ export const MentorCreateInputSchema: z.ZodType<Prisma.MentorCreateInput> = z.ob
   isTopMentor: z.boolean().optional(),
   user: z.lazy(() => UserCreateNestedOneWithoutMentorInputSchema),
   mentees: z.lazy(() => MenteeCreateNestedManyWithoutMentorsInputSchema).optional(),
+  requests: z.lazy(() => RequestCreateNestedManyWithoutMentorInputSchema).optional(),
   meetings: z.lazy(() => MeetingsCreateNestedManyWithoutMentorInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialCreateNestedManyWithoutMentorInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityCreateNestedManyWithoutMentorInputSchema).optional()
@@ -877,6 +990,7 @@ export const MentorUncheckedCreateInputSchema: z.ZodType<Prisma.MentorUncheckedC
   isTopMentor: z.boolean().optional(),
   userId: z.string(),
   mentees: z.lazy(() => MenteeUncheckedCreateNestedManyWithoutMentorsInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityUncheckedCreateNestedManyWithoutMentorInputSchema).optional()
@@ -893,6 +1007,7 @@ export const MentorUpdateInputSchema: z.ZodType<Prisma.MentorUpdateInput> = z.ob
   isTopMentor: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutMentorNestedInputSchema).optional(),
   mentees: z.lazy(() => MenteeUpdateManyWithoutMentorsNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUpdateManyWithoutMentorNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUpdateManyWithoutMentorNestedInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialUpdateManyWithoutMentorNestedInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityUpdateManyWithoutMentorNestedInputSchema).optional()
@@ -909,6 +1024,7 @@ export const MentorUncheckedUpdateInputSchema: z.ZodType<Prisma.MentorUncheckedU
   isTopMentor: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   mentees: z.lazy(() => MenteeUncheckedUpdateManyWithoutMentorsNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityUncheckedUpdateManyWithoutMentorNestedInputSchema).optional()
@@ -960,6 +1076,7 @@ export const MenteeCreateInputSchema: z.ZodType<Prisma.MenteeCreateInput> = z.ob
   dob: z.coerce.date(),
   user: z.lazy(() => UserCreateNestedOneWithoutMenteeInputSchema),
   mentors: z.lazy(() => MentorCreateNestedManyWithoutMenteesInputSchema).optional(),
+  requests: z.lazy(() => RequestCreateNestedManyWithoutMenteeInputSchema).optional(),
   meetings: z.lazy(() => MeetingsCreateNestedManyWithoutMenteeInputSchema).optional(),
   reviews: z.lazy(() => TestimonialCreateNestedManyWithoutMenteeInputSchema).optional()
 }).strict();
@@ -975,6 +1092,7 @@ export const MenteeUncheckedCreateInputSchema: z.ZodType<Prisma.MenteeUncheckedC
   dob: z.coerce.date(),
   userId: z.string(),
   mentors: z.lazy(() => MentorUncheckedCreateNestedManyWithoutMenteesInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedCreateNestedManyWithoutMenteeInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedCreateNestedManyWithoutMenteeInputSchema).optional(),
   reviews: z.lazy(() => TestimonialUncheckedCreateNestedManyWithoutMenteeInputSchema).optional()
 }).strict();
@@ -990,6 +1108,7 @@ export const MenteeUpdateInputSchema: z.ZodType<Prisma.MenteeUpdateInput> = z.ob
   dob: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutMenteeNestedInputSchema).optional(),
   mentors: z.lazy(() => MentorUpdateManyWithoutMenteesNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUpdateManyWithoutMenteeNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUpdateManyWithoutMenteeNestedInputSchema).optional(),
   reviews: z.lazy(() => TestimonialUpdateManyWithoutMenteeNestedInputSchema).optional()
 }).strict();
@@ -1005,6 +1124,7 @@ export const MenteeUncheckedUpdateInputSchema: z.ZodType<Prisma.MenteeUncheckedU
   dob: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   mentors: z.lazy(() => MentorUncheckedUpdateManyWithoutMenteesNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedUpdateManyWithoutMenteeNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedUpdateManyWithoutMenteeNestedInputSchema).optional(),
   reviews: z.lazy(() => TestimonialUncheckedUpdateManyWithoutMenteeNestedInputSchema).optional()
 }).strict();
@@ -1249,6 +1369,67 @@ export const AvailabilityUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Availa
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
+export const RequestCreateInputSchema: z.ZodType<Prisma.RequestCreateInput> = z.object({
+  id: z.string().cuid().optional(),
+  status: z.lazy(() => RequestStatusSchema).optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  mentee: z.lazy(() => MenteeCreateNestedOneWithoutRequestsInputSchema).optional(),
+  mentor: z.lazy(() => MentorCreateNestedOneWithoutRequestsInputSchema).optional()
+}).strict();
+
+export const RequestUncheckedCreateInputSchema: z.ZodType<Prisma.RequestUncheckedCreateInput> = z.object({
+  id: z.string().cuid().optional(),
+  status: z.lazy(() => RequestStatusSchema).optional(),
+  menteeId: z.string().optional().nullable(),
+  mentorId: z.string().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const RequestUpdateInputSchema: z.ZodType<Prisma.RequestUpdateInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => RequestStatusSchema),z.lazy(() => EnumRequestStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  mentee: z.lazy(() => MenteeUpdateOneWithoutRequestsNestedInputSchema).optional(),
+  mentor: z.lazy(() => MentorUpdateOneWithoutRequestsNestedInputSchema).optional()
+}).strict();
+
+export const RequestUncheckedUpdateInputSchema: z.ZodType<Prisma.RequestUncheckedUpdateInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => RequestStatusSchema),z.lazy(() => EnumRequestStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  menteeId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mentorId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const RequestCreateManyInputSchema: z.ZodType<Prisma.RequestCreateManyInput> = z.object({
+  id: z.string().cuid().optional(),
+  status: z.lazy(() => RequestStatusSchema).optional(),
+  menteeId: z.string().optional().nullable(),
+  mentorId: z.string().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const RequestUpdateManyMutationInputSchema: z.ZodType<Prisma.RequestUpdateManyMutationInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => RequestStatusSchema),z.lazy(() => EnumRequestStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const RequestUncheckedUpdateManyInputSchema: z.ZodType<Prisma.RequestUncheckedUpdateManyInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => RequestStatusSchema),z.lazy(() => EnumRequestStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  menteeId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mentorId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
 export const StringFilterSchema: z.ZodType<Prisma.StringFilter> = z.object({
   equals: z.string().optional(),
   in: z.union([ z.string().array(),z.string() ]).optional(),
@@ -1471,6 +1652,12 @@ export const UserRelationFilterSchema: z.ZodType<Prisma.UserRelationFilter> = z.
   isNot: z.lazy(() => UserWhereInputSchema).optional().nullable()
 }).strict();
 
+export const RequestListRelationFilterSchema: z.ZodType<Prisma.RequestListRelationFilter> = z.object({
+  every: z.lazy(() => RequestWhereInputSchema).optional(),
+  some: z.lazy(() => RequestWhereInputSchema).optional(),
+  none: z.lazy(() => RequestWhereInputSchema).optional()
+}).strict();
+
 export const MeetingsListRelationFilterSchema: z.ZodType<Prisma.MeetingsListRelationFilter> = z.object({
   every: z.lazy(() => MeetingsWhereInputSchema).optional(),
   some: z.lazy(() => MeetingsWhereInputSchema).optional(),
@@ -1487,6 +1674,10 @@ export const AvailabilityListRelationFilterSchema: z.ZodType<Prisma.Availability
   every: z.lazy(() => AvailabilityWhereInputSchema).optional(),
   some: z.lazy(() => AvailabilityWhereInputSchema).optional(),
   none: z.lazy(() => AvailabilityWhereInputSchema).optional()
+}).strict();
+
+export const RequestOrderByRelationAggregateInputSchema: z.ZodType<Prisma.RequestOrderByRelationAggregateInput> = z.object({
+  _count: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const MeetingsOrderByRelationAggregateInputSchema: z.ZodType<Prisma.MeetingsOrderByRelationAggregateInput> = z.object({
@@ -1751,6 +1942,61 @@ export const AvailabilityMinOrderByAggregateInputSchema: z.ZodType<Prisma.Availa
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
+export const EnumRequestStatusFilterSchema: z.ZodType<Prisma.EnumRequestStatusFilter> = z.object({
+  equals: z.lazy(() => RequestStatusSchema).optional(),
+  in: z.union([ z.lazy(() => RequestStatusSchema).array(),z.lazy(() => RequestStatusSchema) ]).optional(),
+  notIn: z.union([ z.lazy(() => RequestStatusSchema).array(),z.lazy(() => RequestStatusSchema) ]).optional(),
+  not: z.union([ z.lazy(() => RequestStatusSchema),z.lazy(() => NestedEnumRequestStatusFilterSchema) ]).optional(),
+}).strict();
+
+export const RequestOrderByRelevanceInputSchema: z.ZodType<Prisma.RequestOrderByRelevanceInput> = z.object({
+  fields: z.union([ z.lazy(() => RequestOrderByRelevanceFieldEnumSchema),z.lazy(() => RequestOrderByRelevanceFieldEnumSchema).array() ]),
+  sort: z.lazy(() => SortOrderSchema),
+  search: z.string()
+}).strict();
+
+export const RequestMentorIdMenteeIdCompoundUniqueInputSchema: z.ZodType<Prisma.RequestMentorIdMenteeIdCompoundUniqueInput> = z.object({
+  mentorId: z.string(),
+  menteeId: z.string()
+}).strict();
+
+export const RequestCountOrderByAggregateInputSchema: z.ZodType<Prisma.RequestCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  status: z.lazy(() => SortOrderSchema).optional(),
+  menteeId: z.lazy(() => SortOrderSchema).optional(),
+  mentorId: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const RequestMaxOrderByAggregateInputSchema: z.ZodType<Prisma.RequestMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  status: z.lazy(() => SortOrderSchema).optional(),
+  menteeId: z.lazy(() => SortOrderSchema).optional(),
+  mentorId: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const RequestMinOrderByAggregateInputSchema: z.ZodType<Prisma.RequestMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  status: z.lazy(() => SortOrderSchema).optional(),
+  menteeId: z.lazy(() => SortOrderSchema).optional(),
+  mentorId: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const EnumRequestStatusWithAggregatesFilterSchema: z.ZodType<Prisma.EnumRequestStatusWithAggregatesFilter> = z.object({
+  equals: z.lazy(() => RequestStatusSchema).optional(),
+  in: z.union([ z.lazy(() => RequestStatusSchema).array(),z.lazy(() => RequestStatusSchema) ]).optional(),
+  notIn: z.union([ z.lazy(() => RequestStatusSchema).array(),z.lazy(() => RequestStatusSchema) ]).optional(),
+  not: z.union([ z.lazy(() => RequestStatusSchema),z.lazy(() => NestedEnumRequestStatusWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedEnumRequestStatusFilterSchema).optional(),
+  _max: z.lazy(() => NestedEnumRequestStatusFilterSchema).optional()
+}).strict();
+
 export const MentorCreateNestedManyWithoutUserInputSchema: z.ZodType<Prisma.MentorCreateNestedManyWithoutUserInput> = z.object({
   create: z.union([ z.lazy(() => MentorCreateWithoutUserInputSchema),z.lazy(() => MentorCreateWithoutUserInputSchema).array(),z.lazy(() => MentorUncheckedCreateWithoutUserInputSchema),z.lazy(() => MentorUncheckedCreateWithoutUserInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => MentorCreateOrConnectWithoutUserInputSchema),z.lazy(() => MentorCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
@@ -1867,6 +2113,13 @@ export const MenteeCreateNestedManyWithoutMentorsInputSchema: z.ZodType<Prisma.M
   connect: z.union([ z.lazy(() => MenteeWhereUniqueInputSchema),z.lazy(() => MenteeWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
+export const RequestCreateNestedManyWithoutMentorInputSchema: z.ZodType<Prisma.RequestCreateNestedManyWithoutMentorInput> = z.object({
+  create: z.union([ z.lazy(() => RequestCreateWithoutMentorInputSchema),z.lazy(() => RequestCreateWithoutMentorInputSchema).array(),z.lazy(() => RequestUncheckedCreateWithoutMentorInputSchema),z.lazy(() => RequestUncheckedCreateWithoutMentorInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => RequestCreateOrConnectWithoutMentorInputSchema),z.lazy(() => RequestCreateOrConnectWithoutMentorInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => RequestCreateManyMentorInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
 export const MeetingsCreateNestedManyWithoutMentorInputSchema: z.ZodType<Prisma.MeetingsCreateNestedManyWithoutMentorInput> = z.object({
   create: z.union([ z.lazy(() => MeetingsCreateWithoutMentorInputSchema),z.lazy(() => MeetingsCreateWithoutMentorInputSchema).array(),z.lazy(() => MeetingsUncheckedCreateWithoutMentorInputSchema),z.lazy(() => MeetingsUncheckedCreateWithoutMentorInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => MeetingsCreateOrConnectWithoutMentorInputSchema),z.lazy(() => MeetingsCreateOrConnectWithoutMentorInputSchema).array() ]).optional(),
@@ -1892,6 +2145,13 @@ export const MenteeUncheckedCreateNestedManyWithoutMentorsInputSchema: z.ZodType
   create: z.union([ z.lazy(() => MenteeCreateWithoutMentorsInputSchema),z.lazy(() => MenteeCreateWithoutMentorsInputSchema).array(),z.lazy(() => MenteeUncheckedCreateWithoutMentorsInputSchema),z.lazy(() => MenteeUncheckedCreateWithoutMentorsInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => MenteeCreateOrConnectWithoutMentorsInputSchema),z.lazy(() => MenteeCreateOrConnectWithoutMentorsInputSchema).array() ]).optional(),
   connect: z.union([ z.lazy(() => MenteeWhereUniqueInputSchema),z.lazy(() => MenteeWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const RequestUncheckedCreateNestedManyWithoutMentorInputSchema: z.ZodType<Prisma.RequestUncheckedCreateNestedManyWithoutMentorInput> = z.object({
+  create: z.union([ z.lazy(() => RequestCreateWithoutMentorInputSchema),z.lazy(() => RequestCreateWithoutMentorInputSchema).array(),z.lazy(() => RequestUncheckedCreateWithoutMentorInputSchema),z.lazy(() => RequestUncheckedCreateWithoutMentorInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => RequestCreateOrConnectWithoutMentorInputSchema),z.lazy(() => RequestCreateOrConnectWithoutMentorInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => RequestCreateManyMentorInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
 export const MeetingsUncheckedCreateNestedManyWithoutMentorInputSchema: z.ZodType<Prisma.MeetingsUncheckedCreateNestedManyWithoutMentorInput> = z.object({
@@ -1952,6 +2212,20 @@ export const MenteeUpdateManyWithoutMentorsNestedInputSchema: z.ZodType<Prisma.M
   deleteMany: z.union([ z.lazy(() => MenteeScalarWhereInputSchema),z.lazy(() => MenteeScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
+export const RequestUpdateManyWithoutMentorNestedInputSchema: z.ZodType<Prisma.RequestUpdateManyWithoutMentorNestedInput> = z.object({
+  create: z.union([ z.lazy(() => RequestCreateWithoutMentorInputSchema),z.lazy(() => RequestCreateWithoutMentorInputSchema).array(),z.lazy(() => RequestUncheckedCreateWithoutMentorInputSchema),z.lazy(() => RequestUncheckedCreateWithoutMentorInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => RequestCreateOrConnectWithoutMentorInputSchema),z.lazy(() => RequestCreateOrConnectWithoutMentorInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => RequestUpsertWithWhereUniqueWithoutMentorInputSchema),z.lazy(() => RequestUpsertWithWhereUniqueWithoutMentorInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => RequestCreateManyMentorInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => RequestUpdateWithWhereUniqueWithoutMentorInputSchema),z.lazy(() => RequestUpdateWithWhereUniqueWithoutMentorInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => RequestUpdateManyWithWhereWithoutMentorInputSchema),z.lazy(() => RequestUpdateManyWithWhereWithoutMentorInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => RequestScalarWhereInputSchema),z.lazy(() => RequestScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
 export const MeetingsUpdateManyWithoutMentorNestedInputSchema: z.ZodType<Prisma.MeetingsUpdateManyWithoutMentorNestedInput> = z.object({
   create: z.union([ z.lazy(() => MeetingsCreateWithoutMentorInputSchema),z.lazy(() => MeetingsCreateWithoutMentorInputSchema).array(),z.lazy(() => MeetingsUncheckedCreateWithoutMentorInputSchema),z.lazy(() => MeetingsUncheckedCreateWithoutMentorInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => MeetingsCreateOrConnectWithoutMentorInputSchema),z.lazy(() => MeetingsCreateOrConnectWithoutMentorInputSchema).array() ]).optional(),
@@ -2005,6 +2279,20 @@ export const MenteeUncheckedUpdateManyWithoutMentorsNestedInputSchema: z.ZodType
   update: z.union([ z.lazy(() => MenteeUpdateWithWhereUniqueWithoutMentorsInputSchema),z.lazy(() => MenteeUpdateWithWhereUniqueWithoutMentorsInputSchema).array() ]).optional(),
   updateMany: z.union([ z.lazy(() => MenteeUpdateManyWithWhereWithoutMentorsInputSchema),z.lazy(() => MenteeUpdateManyWithWhereWithoutMentorsInputSchema).array() ]).optional(),
   deleteMany: z.union([ z.lazy(() => MenteeScalarWhereInputSchema),z.lazy(() => MenteeScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const RequestUncheckedUpdateManyWithoutMentorNestedInputSchema: z.ZodType<Prisma.RequestUncheckedUpdateManyWithoutMentorNestedInput> = z.object({
+  create: z.union([ z.lazy(() => RequestCreateWithoutMentorInputSchema),z.lazy(() => RequestCreateWithoutMentorInputSchema).array(),z.lazy(() => RequestUncheckedCreateWithoutMentorInputSchema),z.lazy(() => RequestUncheckedCreateWithoutMentorInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => RequestCreateOrConnectWithoutMentorInputSchema),z.lazy(() => RequestCreateOrConnectWithoutMentorInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => RequestUpsertWithWhereUniqueWithoutMentorInputSchema),z.lazy(() => RequestUpsertWithWhereUniqueWithoutMentorInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => RequestCreateManyMentorInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => RequestUpdateWithWhereUniqueWithoutMentorInputSchema),z.lazy(() => RequestUpdateWithWhereUniqueWithoutMentorInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => RequestUpdateManyWithWhereWithoutMentorInputSchema),z.lazy(() => RequestUpdateManyWithWhereWithoutMentorInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => RequestScalarWhereInputSchema),z.lazy(() => RequestScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
 export const MeetingsUncheckedUpdateManyWithoutMentorNestedInputSchema: z.ZodType<Prisma.MeetingsUncheckedUpdateManyWithoutMentorNestedInput> = z.object({
@@ -2065,6 +2353,13 @@ export const MentorCreateNestedManyWithoutMenteesInputSchema: z.ZodType<Prisma.M
   connect: z.union([ z.lazy(() => MentorWhereUniqueInputSchema),z.lazy(() => MentorWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
+export const RequestCreateNestedManyWithoutMenteeInputSchema: z.ZodType<Prisma.RequestCreateNestedManyWithoutMenteeInput> = z.object({
+  create: z.union([ z.lazy(() => RequestCreateWithoutMenteeInputSchema),z.lazy(() => RequestCreateWithoutMenteeInputSchema).array(),z.lazy(() => RequestUncheckedCreateWithoutMenteeInputSchema),z.lazy(() => RequestUncheckedCreateWithoutMenteeInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => RequestCreateOrConnectWithoutMenteeInputSchema),z.lazy(() => RequestCreateOrConnectWithoutMenteeInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => RequestCreateManyMenteeInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
 export const MeetingsCreateNestedManyWithoutMenteeInputSchema: z.ZodType<Prisma.MeetingsCreateNestedManyWithoutMenteeInput> = z.object({
   create: z.union([ z.lazy(() => MeetingsCreateWithoutMenteeInputSchema),z.lazy(() => MeetingsCreateWithoutMenteeInputSchema).array(),z.lazy(() => MeetingsUncheckedCreateWithoutMenteeInputSchema),z.lazy(() => MeetingsUncheckedCreateWithoutMenteeInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => MeetingsCreateOrConnectWithoutMenteeInputSchema),z.lazy(() => MeetingsCreateOrConnectWithoutMenteeInputSchema).array() ]).optional(),
@@ -2083,6 +2378,13 @@ export const MentorUncheckedCreateNestedManyWithoutMenteesInputSchema: z.ZodType
   create: z.union([ z.lazy(() => MentorCreateWithoutMenteesInputSchema),z.lazy(() => MentorCreateWithoutMenteesInputSchema).array(),z.lazy(() => MentorUncheckedCreateWithoutMenteesInputSchema),z.lazy(() => MentorUncheckedCreateWithoutMenteesInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => MentorCreateOrConnectWithoutMenteesInputSchema),z.lazy(() => MentorCreateOrConnectWithoutMenteesInputSchema).array() ]).optional(),
   connect: z.union([ z.lazy(() => MentorWhereUniqueInputSchema),z.lazy(() => MentorWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const RequestUncheckedCreateNestedManyWithoutMenteeInputSchema: z.ZodType<Prisma.RequestUncheckedCreateNestedManyWithoutMenteeInput> = z.object({
+  create: z.union([ z.lazy(() => RequestCreateWithoutMenteeInputSchema),z.lazy(() => RequestCreateWithoutMenteeInputSchema).array(),z.lazy(() => RequestUncheckedCreateWithoutMenteeInputSchema),z.lazy(() => RequestUncheckedCreateWithoutMenteeInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => RequestCreateOrConnectWithoutMenteeInputSchema),z.lazy(() => RequestCreateOrConnectWithoutMenteeInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => RequestCreateManyMenteeInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
 export const MeetingsUncheckedCreateNestedManyWithoutMenteeInputSchema: z.ZodType<Prisma.MeetingsUncheckedCreateNestedManyWithoutMenteeInput> = z.object({
@@ -2125,6 +2427,20 @@ export const MentorUpdateManyWithoutMenteesNestedInputSchema: z.ZodType<Prisma.M
   deleteMany: z.union([ z.lazy(() => MentorScalarWhereInputSchema),z.lazy(() => MentorScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
+export const RequestUpdateManyWithoutMenteeNestedInputSchema: z.ZodType<Prisma.RequestUpdateManyWithoutMenteeNestedInput> = z.object({
+  create: z.union([ z.lazy(() => RequestCreateWithoutMenteeInputSchema),z.lazy(() => RequestCreateWithoutMenteeInputSchema).array(),z.lazy(() => RequestUncheckedCreateWithoutMenteeInputSchema),z.lazy(() => RequestUncheckedCreateWithoutMenteeInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => RequestCreateOrConnectWithoutMenteeInputSchema),z.lazy(() => RequestCreateOrConnectWithoutMenteeInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => RequestUpsertWithWhereUniqueWithoutMenteeInputSchema),z.lazy(() => RequestUpsertWithWhereUniqueWithoutMenteeInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => RequestCreateManyMenteeInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => RequestUpdateWithWhereUniqueWithoutMenteeInputSchema),z.lazy(() => RequestUpdateWithWhereUniqueWithoutMenteeInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => RequestUpdateManyWithWhereWithoutMenteeInputSchema),z.lazy(() => RequestUpdateManyWithWhereWithoutMenteeInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => RequestScalarWhereInputSchema),z.lazy(() => RequestScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
 export const MeetingsUpdateManyWithoutMenteeNestedInputSchema: z.ZodType<Prisma.MeetingsUpdateManyWithoutMenteeNestedInput> = z.object({
   create: z.union([ z.lazy(() => MeetingsCreateWithoutMenteeInputSchema),z.lazy(() => MeetingsCreateWithoutMenteeInputSchema).array(),z.lazy(() => MeetingsUncheckedCreateWithoutMenteeInputSchema),z.lazy(() => MeetingsUncheckedCreateWithoutMenteeInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => MeetingsCreateOrConnectWithoutMenteeInputSchema),z.lazy(() => MeetingsCreateOrConnectWithoutMenteeInputSchema).array() ]).optional(),
@@ -2164,6 +2480,20 @@ export const MentorUncheckedUpdateManyWithoutMenteesNestedInputSchema: z.ZodType
   update: z.union([ z.lazy(() => MentorUpdateWithWhereUniqueWithoutMenteesInputSchema),z.lazy(() => MentorUpdateWithWhereUniqueWithoutMenteesInputSchema).array() ]).optional(),
   updateMany: z.union([ z.lazy(() => MentorUpdateManyWithWhereWithoutMenteesInputSchema),z.lazy(() => MentorUpdateManyWithWhereWithoutMenteesInputSchema).array() ]).optional(),
   deleteMany: z.union([ z.lazy(() => MentorScalarWhereInputSchema),z.lazy(() => MentorScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const RequestUncheckedUpdateManyWithoutMenteeNestedInputSchema: z.ZodType<Prisma.RequestUncheckedUpdateManyWithoutMenteeNestedInput> = z.object({
+  create: z.union([ z.lazy(() => RequestCreateWithoutMenteeInputSchema),z.lazy(() => RequestCreateWithoutMenteeInputSchema).array(),z.lazy(() => RequestUncheckedCreateWithoutMenteeInputSchema),z.lazy(() => RequestUncheckedCreateWithoutMenteeInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => RequestCreateOrConnectWithoutMenteeInputSchema),z.lazy(() => RequestCreateOrConnectWithoutMenteeInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => RequestUpsertWithWhereUniqueWithoutMenteeInputSchema),z.lazy(() => RequestUpsertWithWhereUniqueWithoutMenteeInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => RequestCreateManyMenteeInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => RequestWhereUniqueInputSchema),z.lazy(() => RequestWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => RequestUpdateWithWhereUniqueWithoutMenteeInputSchema),z.lazy(() => RequestUpdateWithWhereUniqueWithoutMenteeInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => RequestUpdateManyWithWhereWithoutMenteeInputSchema),z.lazy(() => RequestUpdateManyWithWhereWithoutMenteeInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => RequestScalarWhereInputSchema),z.lazy(() => RequestScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
 export const MeetingsUncheckedUpdateManyWithoutMenteeNestedInputSchema: z.ZodType<Prisma.MeetingsUncheckedUpdateManyWithoutMenteeNestedInput> = z.object({
@@ -2268,6 +2598,42 @@ export const MentorUpdateOneWithoutAvailabilitiesNestedInputSchema: z.ZodType<Pr
   delete: z.boolean().optional(),
   connect: z.lazy(() => MentorWhereUniqueInputSchema).optional(),
   update: z.union([ z.lazy(() => MentorUpdateWithoutAvailabilitiesInputSchema),z.lazy(() => MentorUncheckedUpdateWithoutAvailabilitiesInputSchema) ]).optional(),
+}).strict();
+
+export const MenteeCreateNestedOneWithoutRequestsInputSchema: z.ZodType<Prisma.MenteeCreateNestedOneWithoutRequestsInput> = z.object({
+  create: z.union([ z.lazy(() => MenteeCreateWithoutRequestsInputSchema),z.lazy(() => MenteeUncheckedCreateWithoutRequestsInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => MenteeCreateOrConnectWithoutRequestsInputSchema).optional(),
+  connect: z.lazy(() => MenteeWhereUniqueInputSchema).optional()
+}).strict();
+
+export const MentorCreateNestedOneWithoutRequestsInputSchema: z.ZodType<Prisma.MentorCreateNestedOneWithoutRequestsInput> = z.object({
+  create: z.union([ z.lazy(() => MentorCreateWithoutRequestsInputSchema),z.lazy(() => MentorUncheckedCreateWithoutRequestsInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => MentorCreateOrConnectWithoutRequestsInputSchema).optional(),
+  connect: z.lazy(() => MentorWhereUniqueInputSchema).optional()
+}).strict();
+
+export const EnumRequestStatusFieldUpdateOperationsInputSchema: z.ZodType<Prisma.EnumRequestStatusFieldUpdateOperationsInput> = z.object({
+  set: z.lazy(() => RequestStatusSchema).optional()
+}).strict();
+
+export const MenteeUpdateOneWithoutRequestsNestedInputSchema: z.ZodType<Prisma.MenteeUpdateOneWithoutRequestsNestedInput> = z.object({
+  create: z.union([ z.lazy(() => MenteeCreateWithoutRequestsInputSchema),z.lazy(() => MenteeUncheckedCreateWithoutRequestsInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => MenteeCreateOrConnectWithoutRequestsInputSchema).optional(),
+  upsert: z.lazy(() => MenteeUpsertWithoutRequestsInputSchema).optional(),
+  disconnect: z.boolean().optional(),
+  delete: z.boolean().optional(),
+  connect: z.lazy(() => MenteeWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => MenteeUpdateWithoutRequestsInputSchema),z.lazy(() => MenteeUncheckedUpdateWithoutRequestsInputSchema) ]).optional(),
+}).strict();
+
+export const MentorUpdateOneWithoutRequestsNestedInputSchema: z.ZodType<Prisma.MentorUpdateOneWithoutRequestsNestedInput> = z.object({
+  create: z.union([ z.lazy(() => MentorCreateWithoutRequestsInputSchema),z.lazy(() => MentorUncheckedCreateWithoutRequestsInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => MentorCreateOrConnectWithoutRequestsInputSchema).optional(),
+  upsert: z.lazy(() => MentorUpsertWithoutRequestsInputSchema).optional(),
+  disconnect: z.boolean().optional(),
+  delete: z.boolean().optional(),
+  connect: z.lazy(() => MentorWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => MentorUpdateWithoutRequestsInputSchema),z.lazy(() => MentorUncheckedUpdateWithoutRequestsInputSchema) ]).optional(),
 }).strict();
 
 export const NestedStringFilterSchema: z.ZodType<Prisma.NestedStringFilter> = z.object({
@@ -2456,6 +2822,23 @@ export const NestedFloatWithAggregatesFilterSchema: z.ZodType<Prisma.NestedFloat
   _max: z.lazy(() => NestedFloatFilterSchema).optional()
 }).strict();
 
+export const NestedEnumRequestStatusFilterSchema: z.ZodType<Prisma.NestedEnumRequestStatusFilter> = z.object({
+  equals: z.lazy(() => RequestStatusSchema).optional(),
+  in: z.union([ z.lazy(() => RequestStatusSchema).array(),z.lazy(() => RequestStatusSchema) ]).optional(),
+  notIn: z.union([ z.lazy(() => RequestStatusSchema).array(),z.lazy(() => RequestStatusSchema) ]).optional(),
+  not: z.union([ z.lazy(() => RequestStatusSchema),z.lazy(() => NestedEnumRequestStatusFilterSchema) ]).optional(),
+}).strict();
+
+export const NestedEnumRequestStatusWithAggregatesFilterSchema: z.ZodType<Prisma.NestedEnumRequestStatusWithAggregatesFilter> = z.object({
+  equals: z.lazy(() => RequestStatusSchema).optional(),
+  in: z.union([ z.lazy(() => RequestStatusSchema).array(),z.lazy(() => RequestStatusSchema) ]).optional(),
+  notIn: z.union([ z.lazy(() => RequestStatusSchema).array(),z.lazy(() => RequestStatusSchema) ]).optional(),
+  not: z.union([ z.lazy(() => RequestStatusSchema),z.lazy(() => NestedEnumRequestStatusWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedEnumRequestStatusFilterSchema).optional(),
+  _max: z.lazy(() => NestedEnumRequestStatusFilterSchema).optional()
+}).strict();
+
 export const MentorCreateWithoutUserInputSchema: z.ZodType<Prisma.MentorCreateWithoutUserInput> = z.object({
   id: z.string().cuid().optional(),
   currentTitle: z.string(),
@@ -2466,6 +2849,7 @@ export const MentorCreateWithoutUserInputSchema: z.ZodType<Prisma.MentorCreateWi
   rating: z.number().optional(),
   isTopMentor: z.boolean().optional(),
   mentees: z.lazy(() => MenteeCreateNestedManyWithoutMentorsInputSchema).optional(),
+  requests: z.lazy(() => RequestCreateNestedManyWithoutMentorInputSchema).optional(),
   meetings: z.lazy(() => MeetingsCreateNestedManyWithoutMentorInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialCreateNestedManyWithoutMentorInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityCreateNestedManyWithoutMentorInputSchema).optional()
@@ -2481,6 +2865,7 @@ export const MentorUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.Mento
   rating: z.number().optional(),
   isTopMentor: z.boolean().optional(),
   mentees: z.lazy(() => MenteeUncheckedCreateNestedManyWithoutMentorsInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityUncheckedCreateNestedManyWithoutMentorInputSchema).optional()
@@ -2506,6 +2891,7 @@ export const MenteeCreateWithoutUserInputSchema: z.ZodType<Prisma.MenteeCreateWi
   bio: z.string(),
   dob: z.coerce.date(),
   mentors: z.lazy(() => MentorCreateNestedManyWithoutMenteesInputSchema).optional(),
+  requests: z.lazy(() => RequestCreateNestedManyWithoutMenteeInputSchema).optional(),
   meetings: z.lazy(() => MeetingsCreateNestedManyWithoutMenteeInputSchema).optional(),
   reviews: z.lazy(() => TestimonialCreateNestedManyWithoutMenteeInputSchema).optional()
 }).strict();
@@ -2520,6 +2906,7 @@ export const MenteeUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.Mente
   bio: z.string(),
   dob: z.coerce.date(),
   mentors: z.lazy(() => MentorUncheckedCreateNestedManyWithoutMenteesInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedCreateNestedManyWithoutMenteeInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedCreateNestedManyWithoutMenteeInputSchema).optional(),
   reviews: z.lazy(() => TestimonialUncheckedCreateNestedManyWithoutMenteeInputSchema).optional()
 }).strict();
@@ -2639,6 +3026,7 @@ export const MenteeCreateWithoutMentorsInputSchema: z.ZodType<Prisma.MenteeCreat
   bio: z.string(),
   dob: z.coerce.date(),
   user: z.lazy(() => UserCreateNestedOneWithoutMenteeInputSchema),
+  requests: z.lazy(() => RequestCreateNestedManyWithoutMenteeInputSchema).optional(),
   meetings: z.lazy(() => MeetingsCreateNestedManyWithoutMenteeInputSchema).optional(),
   reviews: z.lazy(() => TestimonialCreateNestedManyWithoutMenteeInputSchema).optional()
 }).strict();
@@ -2653,6 +3041,7 @@ export const MenteeUncheckedCreateWithoutMentorsInputSchema: z.ZodType<Prisma.Me
   bio: z.string(),
   dob: z.coerce.date(),
   userId: z.string(),
+  requests: z.lazy(() => RequestUncheckedCreateNestedManyWithoutMenteeInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedCreateNestedManyWithoutMenteeInputSchema).optional(),
   reviews: z.lazy(() => TestimonialUncheckedCreateNestedManyWithoutMenteeInputSchema).optional()
 }).strict();
@@ -2660,6 +3049,32 @@ export const MenteeUncheckedCreateWithoutMentorsInputSchema: z.ZodType<Prisma.Me
 export const MenteeCreateOrConnectWithoutMentorsInputSchema: z.ZodType<Prisma.MenteeCreateOrConnectWithoutMentorsInput> = z.object({
   where: z.lazy(() => MenteeWhereUniqueInputSchema),
   create: z.union([ z.lazy(() => MenteeCreateWithoutMentorsInputSchema),z.lazy(() => MenteeUncheckedCreateWithoutMentorsInputSchema) ]),
+}).strict();
+
+export const RequestCreateWithoutMentorInputSchema: z.ZodType<Prisma.RequestCreateWithoutMentorInput> = z.object({
+  id: z.string().cuid().optional(),
+  status: z.lazy(() => RequestStatusSchema).optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  mentee: z.lazy(() => MenteeCreateNestedOneWithoutRequestsInputSchema).optional()
+}).strict();
+
+export const RequestUncheckedCreateWithoutMentorInputSchema: z.ZodType<Prisma.RequestUncheckedCreateWithoutMentorInput> = z.object({
+  id: z.string().cuid().optional(),
+  status: z.lazy(() => RequestStatusSchema).optional(),
+  menteeId: z.string().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const RequestCreateOrConnectWithoutMentorInputSchema: z.ZodType<Prisma.RequestCreateOrConnectWithoutMentorInput> = z.object({
+  where: z.lazy(() => RequestWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => RequestCreateWithoutMentorInputSchema),z.lazy(() => RequestUncheckedCreateWithoutMentorInputSchema) ]),
+}).strict();
+
+export const RequestCreateManyMentorInputEnvelopeSchema: z.ZodType<Prisma.RequestCreateManyMentorInputEnvelope> = z.object({
+  data: z.union([ z.lazy(() => RequestCreateManyMentorInputSchema),z.lazy(() => RequestCreateManyMentorInputSchema).array() ]),
+  skipDuplicates: z.boolean().optional()
 }).strict();
 
 export const MeetingsCreateWithoutMentorInputSchema: z.ZodType<Prisma.MeetingsCreateWithoutMentorInput> = z.object({
@@ -2795,6 +3210,34 @@ export const MenteeUpdateManyWithWhereWithoutMentorsInputSchema: z.ZodType<Prism
   data: z.union([ z.lazy(() => MenteeUpdateManyMutationInputSchema),z.lazy(() => MenteeUncheckedUpdateManyWithoutMenteesInputSchema) ]),
 }).strict();
 
+export const RequestUpsertWithWhereUniqueWithoutMentorInputSchema: z.ZodType<Prisma.RequestUpsertWithWhereUniqueWithoutMentorInput> = z.object({
+  where: z.lazy(() => RequestWhereUniqueInputSchema),
+  update: z.union([ z.lazy(() => RequestUpdateWithoutMentorInputSchema),z.lazy(() => RequestUncheckedUpdateWithoutMentorInputSchema) ]),
+  create: z.union([ z.lazy(() => RequestCreateWithoutMentorInputSchema),z.lazy(() => RequestUncheckedCreateWithoutMentorInputSchema) ]),
+}).strict();
+
+export const RequestUpdateWithWhereUniqueWithoutMentorInputSchema: z.ZodType<Prisma.RequestUpdateWithWhereUniqueWithoutMentorInput> = z.object({
+  where: z.lazy(() => RequestWhereUniqueInputSchema),
+  data: z.union([ z.lazy(() => RequestUpdateWithoutMentorInputSchema),z.lazy(() => RequestUncheckedUpdateWithoutMentorInputSchema) ]),
+}).strict();
+
+export const RequestUpdateManyWithWhereWithoutMentorInputSchema: z.ZodType<Prisma.RequestUpdateManyWithWhereWithoutMentorInput> = z.object({
+  where: z.lazy(() => RequestScalarWhereInputSchema),
+  data: z.union([ z.lazy(() => RequestUpdateManyMutationInputSchema),z.lazy(() => RequestUncheckedUpdateManyWithoutRequestsInputSchema) ]),
+}).strict();
+
+export const RequestScalarWhereInputSchema: z.ZodType<Prisma.RequestScalarWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => RequestScalarWhereInputSchema),z.lazy(() => RequestScalarWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => RequestScalarWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => RequestScalarWhereInputSchema),z.lazy(() => RequestScalarWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  status: z.union([ z.lazy(() => EnumRequestStatusFilterSchema),z.lazy(() => RequestStatusSchema) ]).optional(),
+  menteeId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  mentorId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+}).strict();
+
 export const MeetingsUpsertWithWhereUniqueWithoutMentorInputSchema: z.ZodType<Prisma.MeetingsUpsertWithWhereUniqueWithoutMentorInput> = z.object({
   where: z.lazy(() => MeetingsWhereUniqueInputSchema),
   update: z.union([ z.lazy(() => MeetingsUpdateWithoutMentorInputSchema),z.lazy(() => MeetingsUncheckedUpdateWithoutMentorInputSchema) ]),
@@ -2925,6 +3368,7 @@ export const MentorCreateWithoutMenteesInputSchema: z.ZodType<Prisma.MentorCreat
   rating: z.number().optional(),
   isTopMentor: z.boolean().optional(),
   user: z.lazy(() => UserCreateNestedOneWithoutMentorInputSchema),
+  requests: z.lazy(() => RequestCreateNestedManyWithoutMentorInputSchema).optional(),
   meetings: z.lazy(() => MeetingsCreateNestedManyWithoutMentorInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialCreateNestedManyWithoutMentorInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityCreateNestedManyWithoutMentorInputSchema).optional()
@@ -2940,6 +3384,7 @@ export const MentorUncheckedCreateWithoutMenteesInputSchema: z.ZodType<Prisma.Me
   rating: z.number().optional(),
   isTopMentor: z.boolean().optional(),
   userId: z.string(),
+  requests: z.lazy(() => RequestUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityUncheckedCreateNestedManyWithoutMentorInputSchema).optional()
@@ -2948,6 +3393,32 @@ export const MentorUncheckedCreateWithoutMenteesInputSchema: z.ZodType<Prisma.Me
 export const MentorCreateOrConnectWithoutMenteesInputSchema: z.ZodType<Prisma.MentorCreateOrConnectWithoutMenteesInput> = z.object({
   where: z.lazy(() => MentorWhereUniqueInputSchema),
   create: z.union([ z.lazy(() => MentorCreateWithoutMenteesInputSchema),z.lazy(() => MentorUncheckedCreateWithoutMenteesInputSchema) ]),
+}).strict();
+
+export const RequestCreateWithoutMenteeInputSchema: z.ZodType<Prisma.RequestCreateWithoutMenteeInput> = z.object({
+  id: z.string().cuid().optional(),
+  status: z.lazy(() => RequestStatusSchema).optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  mentor: z.lazy(() => MentorCreateNestedOneWithoutRequestsInputSchema).optional()
+}).strict();
+
+export const RequestUncheckedCreateWithoutMenteeInputSchema: z.ZodType<Prisma.RequestUncheckedCreateWithoutMenteeInput> = z.object({
+  id: z.string().cuid().optional(),
+  status: z.lazy(() => RequestStatusSchema).optional(),
+  mentorId: z.string().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const RequestCreateOrConnectWithoutMenteeInputSchema: z.ZodType<Prisma.RequestCreateOrConnectWithoutMenteeInput> = z.object({
+  where: z.lazy(() => RequestWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => RequestCreateWithoutMenteeInputSchema),z.lazy(() => RequestUncheckedCreateWithoutMenteeInputSchema) ]),
+}).strict();
+
+export const RequestCreateManyMenteeInputEnvelopeSchema: z.ZodType<Prisma.RequestCreateManyMenteeInputEnvelope> = z.object({
+  data: z.union([ z.lazy(() => RequestCreateManyMenteeInputSchema),z.lazy(() => RequestCreateManyMenteeInputSchema).array() ]),
+  skipDuplicates: z.boolean().optional()
 }).strict();
 
 export const MeetingsCreateWithoutMenteeInputSchema: z.ZodType<Prisma.MeetingsCreateWithoutMenteeInput> = z.object({
@@ -3055,6 +3526,22 @@ export const MentorUpdateManyWithWhereWithoutMenteesInputSchema: z.ZodType<Prism
   data: z.union([ z.lazy(() => MentorUpdateManyMutationInputSchema),z.lazy(() => MentorUncheckedUpdateManyWithoutMentorsInputSchema) ]),
 }).strict();
 
+export const RequestUpsertWithWhereUniqueWithoutMenteeInputSchema: z.ZodType<Prisma.RequestUpsertWithWhereUniqueWithoutMenteeInput> = z.object({
+  where: z.lazy(() => RequestWhereUniqueInputSchema),
+  update: z.union([ z.lazy(() => RequestUpdateWithoutMenteeInputSchema),z.lazy(() => RequestUncheckedUpdateWithoutMenteeInputSchema) ]),
+  create: z.union([ z.lazy(() => RequestCreateWithoutMenteeInputSchema),z.lazy(() => RequestUncheckedCreateWithoutMenteeInputSchema) ]),
+}).strict();
+
+export const RequestUpdateWithWhereUniqueWithoutMenteeInputSchema: z.ZodType<Prisma.RequestUpdateWithWhereUniqueWithoutMenteeInput> = z.object({
+  where: z.lazy(() => RequestWhereUniqueInputSchema),
+  data: z.union([ z.lazy(() => RequestUpdateWithoutMenteeInputSchema),z.lazy(() => RequestUncheckedUpdateWithoutMenteeInputSchema) ]),
+}).strict();
+
+export const RequestUpdateManyWithWhereWithoutMenteeInputSchema: z.ZodType<Prisma.RequestUpdateManyWithWhereWithoutMenteeInput> = z.object({
+  where: z.lazy(() => RequestScalarWhereInputSchema),
+  data: z.union([ z.lazy(() => RequestUpdateManyMutationInputSchema),z.lazy(() => RequestUncheckedUpdateManyWithoutRequestsInputSchema) ]),
+}).strict();
+
 export const MeetingsUpsertWithWhereUniqueWithoutMenteeInputSchema: z.ZodType<Prisma.MeetingsUpsertWithWhereUniqueWithoutMenteeInput> = z.object({
   where: z.lazy(() => MeetingsWhereUniqueInputSchema),
   update: z.union([ z.lazy(() => MeetingsUpdateWithoutMenteeInputSchema),z.lazy(() => MeetingsUncheckedUpdateWithoutMenteeInputSchema) ]),
@@ -3098,6 +3585,7 @@ export const MentorCreateWithoutMeetingsInputSchema: z.ZodType<Prisma.MentorCrea
   isTopMentor: z.boolean().optional(),
   user: z.lazy(() => UserCreateNestedOneWithoutMentorInputSchema),
   mentees: z.lazy(() => MenteeCreateNestedManyWithoutMentorsInputSchema).optional(),
+  requests: z.lazy(() => RequestCreateNestedManyWithoutMentorInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialCreateNestedManyWithoutMentorInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityCreateNestedManyWithoutMentorInputSchema).optional()
 }).strict();
@@ -3113,6 +3601,7 @@ export const MentorUncheckedCreateWithoutMeetingsInputSchema: z.ZodType<Prisma.M
   isTopMentor: z.boolean().optional(),
   userId: z.string(),
   mentees: z.lazy(() => MenteeUncheckedCreateNestedManyWithoutMentorsInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityUncheckedCreateNestedManyWithoutMentorInputSchema).optional()
 }).strict();
@@ -3133,6 +3622,7 @@ export const MenteeCreateWithoutMeetingsInputSchema: z.ZodType<Prisma.MenteeCrea
   dob: z.coerce.date(),
   user: z.lazy(() => UserCreateNestedOneWithoutMenteeInputSchema),
   mentors: z.lazy(() => MentorCreateNestedManyWithoutMenteesInputSchema).optional(),
+  requests: z.lazy(() => RequestCreateNestedManyWithoutMenteeInputSchema).optional(),
   reviews: z.lazy(() => TestimonialCreateNestedManyWithoutMenteeInputSchema).optional()
 }).strict();
 
@@ -3147,6 +3637,7 @@ export const MenteeUncheckedCreateWithoutMeetingsInputSchema: z.ZodType<Prisma.M
   dob: z.coerce.date(),
   userId: z.string(),
   mentors: z.lazy(() => MentorUncheckedCreateNestedManyWithoutMenteesInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedCreateNestedManyWithoutMenteeInputSchema).optional(),
   reviews: z.lazy(() => TestimonialUncheckedCreateNestedManyWithoutMenteeInputSchema).optional()
 }).strict();
 
@@ -3171,6 +3662,7 @@ export const MentorUpdateWithoutMeetingsInputSchema: z.ZodType<Prisma.MentorUpda
   isTopMentor: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutMentorNestedInputSchema).optional(),
   mentees: z.lazy(() => MenteeUpdateManyWithoutMentorsNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUpdateManyWithoutMentorNestedInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialUpdateManyWithoutMentorNestedInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityUpdateManyWithoutMentorNestedInputSchema).optional()
 }).strict();
@@ -3186,6 +3678,7 @@ export const MentorUncheckedUpdateWithoutMeetingsInputSchema: z.ZodType<Prisma.M
   isTopMentor: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   mentees: z.lazy(() => MenteeUncheckedUpdateManyWithoutMentorsNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityUncheckedUpdateManyWithoutMentorNestedInputSchema).optional()
 }).strict();
@@ -3206,6 +3699,7 @@ export const MenteeUpdateWithoutMeetingsInputSchema: z.ZodType<Prisma.MenteeUpda
   dob: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutMenteeNestedInputSchema).optional(),
   mentors: z.lazy(() => MentorUpdateManyWithoutMenteesNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUpdateManyWithoutMenteeNestedInputSchema).optional(),
   reviews: z.lazy(() => TestimonialUpdateManyWithoutMenteeNestedInputSchema).optional()
 }).strict();
 
@@ -3220,6 +3714,7 @@ export const MenteeUncheckedUpdateWithoutMeetingsInputSchema: z.ZodType<Prisma.M
   dob: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   mentors: z.lazy(() => MentorUncheckedUpdateManyWithoutMenteesNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedUpdateManyWithoutMenteeNestedInputSchema).optional(),
   reviews: z.lazy(() => TestimonialUncheckedUpdateManyWithoutMenteeNestedInputSchema).optional()
 }).strict();
 
@@ -3234,6 +3729,7 @@ export const MentorCreateWithoutTestimonialsInputSchema: z.ZodType<Prisma.Mentor
   isTopMentor: z.boolean().optional(),
   user: z.lazy(() => UserCreateNestedOneWithoutMentorInputSchema),
   mentees: z.lazy(() => MenteeCreateNestedManyWithoutMentorsInputSchema).optional(),
+  requests: z.lazy(() => RequestCreateNestedManyWithoutMentorInputSchema).optional(),
   meetings: z.lazy(() => MeetingsCreateNestedManyWithoutMentorInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityCreateNestedManyWithoutMentorInputSchema).optional()
 }).strict();
@@ -3249,6 +3745,7 @@ export const MentorUncheckedCreateWithoutTestimonialsInputSchema: z.ZodType<Pris
   isTopMentor: z.boolean().optional(),
   userId: z.string(),
   mentees: z.lazy(() => MenteeUncheckedCreateNestedManyWithoutMentorsInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityUncheckedCreateNestedManyWithoutMentorInputSchema).optional()
 }).strict();
@@ -3269,6 +3766,7 @@ export const MenteeCreateWithoutReviewsInputSchema: z.ZodType<Prisma.MenteeCreat
   dob: z.coerce.date(),
   user: z.lazy(() => UserCreateNestedOneWithoutMenteeInputSchema),
   mentors: z.lazy(() => MentorCreateNestedManyWithoutMenteesInputSchema).optional(),
+  requests: z.lazy(() => RequestCreateNestedManyWithoutMenteeInputSchema).optional(),
   meetings: z.lazy(() => MeetingsCreateNestedManyWithoutMenteeInputSchema).optional()
 }).strict();
 
@@ -3283,6 +3781,7 @@ export const MenteeUncheckedCreateWithoutReviewsInputSchema: z.ZodType<Prisma.Me
   dob: z.coerce.date(),
   userId: z.string(),
   mentors: z.lazy(() => MentorUncheckedCreateNestedManyWithoutMenteesInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedCreateNestedManyWithoutMenteeInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedCreateNestedManyWithoutMenteeInputSchema).optional()
 }).strict();
 
@@ -3307,6 +3806,7 @@ export const MentorUpdateWithoutTestimonialsInputSchema: z.ZodType<Prisma.Mentor
   isTopMentor: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutMentorNestedInputSchema).optional(),
   mentees: z.lazy(() => MenteeUpdateManyWithoutMentorsNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUpdateManyWithoutMentorNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUpdateManyWithoutMentorNestedInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityUpdateManyWithoutMentorNestedInputSchema).optional()
 }).strict();
@@ -3322,6 +3822,7 @@ export const MentorUncheckedUpdateWithoutTestimonialsInputSchema: z.ZodType<Pris
   isTopMentor: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   mentees: z.lazy(() => MenteeUncheckedUpdateManyWithoutMentorsNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityUncheckedUpdateManyWithoutMentorNestedInputSchema).optional()
 }).strict();
@@ -3342,6 +3843,7 @@ export const MenteeUpdateWithoutReviewsInputSchema: z.ZodType<Prisma.MenteeUpdat
   dob: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutMenteeNestedInputSchema).optional(),
   mentors: z.lazy(() => MentorUpdateManyWithoutMenteesNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUpdateManyWithoutMenteeNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUpdateManyWithoutMenteeNestedInputSchema).optional()
 }).strict();
 
@@ -3356,6 +3858,7 @@ export const MenteeUncheckedUpdateWithoutReviewsInputSchema: z.ZodType<Prisma.Me
   dob: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   mentors: z.lazy(() => MentorUncheckedUpdateManyWithoutMenteesNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedUpdateManyWithoutMenteeNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedUpdateManyWithoutMenteeNestedInputSchema).optional()
 }).strict();
 
@@ -3370,6 +3873,7 @@ export const MentorCreateWithoutAvailabilitiesInputSchema: z.ZodType<Prisma.Ment
   isTopMentor: z.boolean().optional(),
   user: z.lazy(() => UserCreateNestedOneWithoutMentorInputSchema),
   mentees: z.lazy(() => MenteeCreateNestedManyWithoutMentorsInputSchema).optional(),
+  requests: z.lazy(() => RequestCreateNestedManyWithoutMentorInputSchema).optional(),
   meetings: z.lazy(() => MeetingsCreateNestedManyWithoutMentorInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialCreateNestedManyWithoutMentorInputSchema).optional()
 }).strict();
@@ -3385,6 +3889,7 @@ export const MentorUncheckedCreateWithoutAvailabilitiesInputSchema: z.ZodType<Pr
   isTopMentor: z.boolean().optional(),
   userId: z.string(),
   mentees: z.lazy(() => MenteeUncheckedCreateNestedManyWithoutMentorsInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialUncheckedCreateNestedManyWithoutMentorInputSchema).optional()
 }).strict();
@@ -3410,6 +3915,7 @@ export const MentorUpdateWithoutAvailabilitiesInputSchema: z.ZodType<Prisma.Ment
   isTopMentor: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutMentorNestedInputSchema).optional(),
   mentees: z.lazy(() => MenteeUpdateManyWithoutMentorsNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUpdateManyWithoutMentorNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUpdateManyWithoutMentorNestedInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialUpdateManyWithoutMentorNestedInputSchema).optional()
 }).strict();
@@ -3425,8 +3931,153 @@ export const MentorUncheckedUpdateWithoutAvailabilitiesInputSchema: z.ZodType<Pr
   isTopMentor: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   mentees: z.lazy(() => MenteeUncheckedUpdateManyWithoutMentorsNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialUncheckedUpdateManyWithoutMentorNestedInputSchema).optional()
+}).strict();
+
+export const MenteeCreateWithoutRequestsInputSchema: z.ZodType<Prisma.MenteeCreateWithoutRequestsInput> = z.object({
+  id: z.string().cuid().optional(),
+  educationLevel: z.string(),
+  careerGoals: z.string(),
+  careerHistory: z.string(),
+  careerChallenges: z.string(),
+  skills: z.union([ z.lazy(() => MenteeCreateskillsInputSchema),z.string().array() ]).optional(),
+  bio: z.string(),
+  dob: z.coerce.date(),
+  user: z.lazy(() => UserCreateNestedOneWithoutMenteeInputSchema),
+  mentors: z.lazy(() => MentorCreateNestedManyWithoutMenteesInputSchema).optional(),
+  meetings: z.lazy(() => MeetingsCreateNestedManyWithoutMenteeInputSchema).optional(),
+  reviews: z.lazy(() => TestimonialCreateNestedManyWithoutMenteeInputSchema).optional()
+}).strict();
+
+export const MenteeUncheckedCreateWithoutRequestsInputSchema: z.ZodType<Prisma.MenteeUncheckedCreateWithoutRequestsInput> = z.object({
+  id: z.string().cuid().optional(),
+  educationLevel: z.string(),
+  careerGoals: z.string(),
+  careerHistory: z.string(),
+  careerChallenges: z.string(),
+  skills: z.union([ z.lazy(() => MenteeCreateskillsInputSchema),z.string().array() ]).optional(),
+  bio: z.string(),
+  dob: z.coerce.date(),
+  userId: z.string(),
+  mentors: z.lazy(() => MentorUncheckedCreateNestedManyWithoutMenteesInputSchema).optional(),
+  meetings: z.lazy(() => MeetingsUncheckedCreateNestedManyWithoutMenteeInputSchema).optional(),
+  reviews: z.lazy(() => TestimonialUncheckedCreateNestedManyWithoutMenteeInputSchema).optional()
+}).strict();
+
+export const MenteeCreateOrConnectWithoutRequestsInputSchema: z.ZodType<Prisma.MenteeCreateOrConnectWithoutRequestsInput> = z.object({
+  where: z.lazy(() => MenteeWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => MenteeCreateWithoutRequestsInputSchema),z.lazy(() => MenteeUncheckedCreateWithoutRequestsInputSchema) ]),
+}).strict();
+
+export const MentorCreateWithoutRequestsInputSchema: z.ZodType<Prisma.MentorCreateWithoutRequestsInput> = z.object({
+  id: z.string().cuid().optional(),
+  currentTitle: z.string(),
+  companyName: z.string(),
+  fieldOfExpertise: z.string(),
+  yearsOfExperience: z.number().int(),
+  description: z.string(),
+  rating: z.number().optional(),
+  isTopMentor: z.boolean().optional(),
+  user: z.lazy(() => UserCreateNestedOneWithoutMentorInputSchema),
+  mentees: z.lazy(() => MenteeCreateNestedManyWithoutMentorsInputSchema).optional(),
+  meetings: z.lazy(() => MeetingsCreateNestedManyWithoutMentorInputSchema).optional(),
+  testimonials: z.lazy(() => TestimonialCreateNestedManyWithoutMentorInputSchema).optional(),
+  availabilities: z.lazy(() => AvailabilityCreateNestedManyWithoutMentorInputSchema).optional()
+}).strict();
+
+export const MentorUncheckedCreateWithoutRequestsInputSchema: z.ZodType<Prisma.MentorUncheckedCreateWithoutRequestsInput> = z.object({
+  id: z.string().cuid().optional(),
+  currentTitle: z.string(),
+  companyName: z.string(),
+  fieldOfExpertise: z.string(),
+  yearsOfExperience: z.number().int(),
+  description: z.string(),
+  rating: z.number().optional(),
+  isTopMentor: z.boolean().optional(),
+  userId: z.string(),
+  mentees: z.lazy(() => MenteeUncheckedCreateNestedManyWithoutMentorsInputSchema).optional(),
+  meetings: z.lazy(() => MeetingsUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
+  testimonials: z.lazy(() => TestimonialUncheckedCreateNestedManyWithoutMentorInputSchema).optional(),
+  availabilities: z.lazy(() => AvailabilityUncheckedCreateNestedManyWithoutMentorInputSchema).optional()
+}).strict();
+
+export const MentorCreateOrConnectWithoutRequestsInputSchema: z.ZodType<Prisma.MentorCreateOrConnectWithoutRequestsInput> = z.object({
+  where: z.lazy(() => MentorWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => MentorCreateWithoutRequestsInputSchema),z.lazy(() => MentorUncheckedCreateWithoutRequestsInputSchema) ]),
+}).strict();
+
+export const MenteeUpsertWithoutRequestsInputSchema: z.ZodType<Prisma.MenteeUpsertWithoutRequestsInput> = z.object({
+  update: z.union([ z.lazy(() => MenteeUpdateWithoutRequestsInputSchema),z.lazy(() => MenteeUncheckedUpdateWithoutRequestsInputSchema) ]),
+  create: z.union([ z.lazy(() => MenteeCreateWithoutRequestsInputSchema),z.lazy(() => MenteeUncheckedCreateWithoutRequestsInputSchema) ]),
+}).strict();
+
+export const MenteeUpdateWithoutRequestsInputSchema: z.ZodType<Prisma.MenteeUpdateWithoutRequestsInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  educationLevel: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  careerGoals: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  careerHistory: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  careerChallenges: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  skills: z.union([ z.lazy(() => MenteeUpdateskillsInputSchema),z.string().array() ]).optional(),
+  bio: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  dob: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  user: z.lazy(() => UserUpdateOneRequiredWithoutMenteeNestedInputSchema).optional(),
+  mentors: z.lazy(() => MentorUpdateManyWithoutMenteesNestedInputSchema).optional(),
+  meetings: z.lazy(() => MeetingsUpdateManyWithoutMenteeNestedInputSchema).optional(),
+  reviews: z.lazy(() => TestimonialUpdateManyWithoutMenteeNestedInputSchema).optional()
+}).strict();
+
+export const MenteeUncheckedUpdateWithoutRequestsInputSchema: z.ZodType<Prisma.MenteeUncheckedUpdateWithoutRequestsInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  educationLevel: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  careerGoals: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  careerHistory: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  careerChallenges: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  skills: z.union([ z.lazy(() => MenteeUpdateskillsInputSchema),z.string().array() ]).optional(),
+  bio: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  dob: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  mentors: z.lazy(() => MentorUncheckedUpdateManyWithoutMenteesNestedInputSchema).optional(),
+  meetings: z.lazy(() => MeetingsUncheckedUpdateManyWithoutMenteeNestedInputSchema).optional(),
+  reviews: z.lazy(() => TestimonialUncheckedUpdateManyWithoutMenteeNestedInputSchema).optional()
+}).strict();
+
+export const MentorUpsertWithoutRequestsInputSchema: z.ZodType<Prisma.MentorUpsertWithoutRequestsInput> = z.object({
+  update: z.union([ z.lazy(() => MentorUpdateWithoutRequestsInputSchema),z.lazy(() => MentorUncheckedUpdateWithoutRequestsInputSchema) ]),
+  create: z.union([ z.lazy(() => MentorCreateWithoutRequestsInputSchema),z.lazy(() => MentorUncheckedCreateWithoutRequestsInputSchema) ]),
+}).strict();
+
+export const MentorUpdateWithoutRequestsInputSchema: z.ZodType<Prisma.MentorUpdateWithoutRequestsInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  currentTitle: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  companyName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  fieldOfExpertise: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  yearsOfExperience: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  rating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  isTopMentor: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  user: z.lazy(() => UserUpdateOneRequiredWithoutMentorNestedInputSchema).optional(),
+  mentees: z.lazy(() => MenteeUpdateManyWithoutMentorsNestedInputSchema).optional(),
+  meetings: z.lazy(() => MeetingsUpdateManyWithoutMentorNestedInputSchema).optional(),
+  testimonials: z.lazy(() => TestimonialUpdateManyWithoutMentorNestedInputSchema).optional(),
+  availabilities: z.lazy(() => AvailabilityUpdateManyWithoutMentorNestedInputSchema).optional()
+}).strict();
+
+export const MentorUncheckedUpdateWithoutRequestsInputSchema: z.ZodType<Prisma.MentorUncheckedUpdateWithoutRequestsInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  currentTitle: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  companyName: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  fieldOfExpertise: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  yearsOfExperience: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  description: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  rating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
+  isTopMentor: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  mentees: z.lazy(() => MenteeUncheckedUpdateManyWithoutMentorsNestedInputSchema).optional(),
+  meetings: z.lazy(() => MeetingsUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
+  testimonials: z.lazy(() => TestimonialUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
+  availabilities: z.lazy(() => AvailabilityUncheckedUpdateManyWithoutMentorNestedInputSchema).optional()
 }).strict();
 
 export const MentorCreateManyUserInputSchema: z.ZodType<Prisma.MentorCreateManyUserInput> = z.object({
@@ -3461,6 +4112,7 @@ export const MentorUpdateWithoutUserInputSchema: z.ZodType<Prisma.MentorUpdateWi
   rating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   isTopMentor: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   mentees: z.lazy(() => MenteeUpdateManyWithoutMentorsNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUpdateManyWithoutMentorNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUpdateManyWithoutMentorNestedInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialUpdateManyWithoutMentorNestedInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityUpdateManyWithoutMentorNestedInputSchema).optional()
@@ -3476,6 +4128,7 @@ export const MentorUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.Mento
   rating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   isTopMentor: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   mentees: z.lazy(() => MenteeUncheckedUpdateManyWithoutMentorsNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityUncheckedUpdateManyWithoutMentorNestedInputSchema).optional()
@@ -3502,6 +4155,7 @@ export const MenteeUpdateWithoutUserInputSchema: z.ZodType<Prisma.MenteeUpdateWi
   bio: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   dob: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   mentors: z.lazy(() => MentorUpdateManyWithoutMenteesNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUpdateManyWithoutMenteeNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUpdateManyWithoutMenteeNestedInputSchema).optional(),
   reviews: z.lazy(() => TestimonialUpdateManyWithoutMenteeNestedInputSchema).optional()
 }).strict();
@@ -3516,6 +4170,7 @@ export const MenteeUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.Mente
   bio: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   dob: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   mentors: z.lazy(() => MentorUncheckedUpdateManyWithoutMenteesNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUncheckedUpdateManyWithoutMenteeNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedUpdateManyWithoutMenteeNestedInputSchema).optional(),
   reviews: z.lazy(() => TestimonialUncheckedUpdateManyWithoutMenteeNestedInputSchema).optional()
 }).strict();
@@ -3529,6 +4184,14 @@ export const MenteeUncheckedUpdateManyWithoutMenteeInputSchema: z.ZodType<Prisma
   skills: z.union([ z.lazy(() => MenteeUpdateskillsInputSchema),z.string().array() ]).optional(),
   bio: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   dob: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const RequestCreateManyMentorInputSchema: z.ZodType<Prisma.RequestCreateManyMentorInput> = z.object({
+  id: z.string().cuid().optional(),
+  status: z.lazy(() => RequestStatusSchema).optional(),
+  menteeId: z.string().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const MeetingsCreateManyMentorInputSchema: z.ZodType<Prisma.MeetingsCreateManyMentorInput> = z.object({
@@ -3568,6 +4231,7 @@ export const MenteeUpdateWithoutMentorsInputSchema: z.ZodType<Prisma.MenteeUpdat
   bio: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   dob: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutMenteeNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUpdateManyWithoutMenteeNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUpdateManyWithoutMenteeNestedInputSchema).optional(),
   reviews: z.lazy(() => TestimonialUpdateManyWithoutMenteeNestedInputSchema).optional()
 }).strict();
@@ -3582,6 +4246,7 @@ export const MenteeUncheckedUpdateWithoutMentorsInputSchema: z.ZodType<Prisma.Me
   bio: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   dob: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  requests: z.lazy(() => RequestUncheckedUpdateManyWithoutMenteeNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedUpdateManyWithoutMenteeNestedInputSchema).optional(),
   reviews: z.lazy(() => TestimonialUncheckedUpdateManyWithoutMenteeNestedInputSchema).optional()
 }).strict();
@@ -3596,6 +4261,30 @@ export const MenteeUncheckedUpdateManyWithoutMenteesInputSchema: z.ZodType<Prism
   bio: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   dob: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const RequestUpdateWithoutMentorInputSchema: z.ZodType<Prisma.RequestUpdateWithoutMentorInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => RequestStatusSchema),z.lazy(() => EnumRequestStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  mentee: z.lazy(() => MenteeUpdateOneWithoutRequestsNestedInputSchema).optional()
+}).strict();
+
+export const RequestUncheckedUpdateWithoutMentorInputSchema: z.ZodType<Prisma.RequestUncheckedUpdateWithoutMentorInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => RequestStatusSchema),z.lazy(() => EnumRequestStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  menteeId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const RequestUncheckedUpdateManyWithoutRequestsInputSchema: z.ZodType<Prisma.RequestUncheckedUpdateManyWithoutRequestsInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => RequestStatusSchema),z.lazy(() => EnumRequestStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  menteeId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const MeetingsUpdateWithoutMentorInputSchema: z.ZodType<Prisma.MeetingsUpdateWithoutMentorInput> = z.object({
@@ -3679,6 +4368,14 @@ export const AvailabilityUncheckedUpdateManyWithoutAvailabilitiesInputSchema: z.
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
+export const RequestCreateManyMenteeInputSchema: z.ZodType<Prisma.RequestCreateManyMenteeInput> = z.object({
+  id: z.string().cuid().optional(),
+  status: z.lazy(() => RequestStatusSchema).optional(),
+  mentorId: z.string().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
 export const MeetingsCreateManyMenteeInputSchema: z.ZodType<Prisma.MeetingsCreateManyMenteeInput> = z.object({
   id: z.string().cuid().optional(),
   date: z.coerce.date(),
@@ -3707,6 +4404,7 @@ export const MentorUpdateWithoutMenteesInputSchema: z.ZodType<Prisma.MentorUpdat
   rating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   isTopMentor: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutMentorNestedInputSchema).optional(),
+  requests: z.lazy(() => RequestUpdateManyWithoutMentorNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUpdateManyWithoutMentorNestedInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialUpdateManyWithoutMentorNestedInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityUpdateManyWithoutMentorNestedInputSchema).optional()
@@ -3722,6 +4420,7 @@ export const MentorUncheckedUpdateWithoutMenteesInputSchema: z.ZodType<Prisma.Me
   rating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   isTopMentor: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  requests: z.lazy(() => RequestUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
   meetings: z.lazy(() => MeetingsUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
   testimonials: z.lazy(() => TestimonialUncheckedUpdateManyWithoutMentorNestedInputSchema).optional(),
   availabilities: z.lazy(() => AvailabilityUncheckedUpdateManyWithoutMentorNestedInputSchema).optional()
@@ -3737,6 +4436,22 @@ export const MentorUncheckedUpdateManyWithoutMentorsInputSchema: z.ZodType<Prism
   rating: z.union([ z.number(),z.lazy(() => FloatFieldUpdateOperationsInputSchema) ]).optional(),
   isTopMentor: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const RequestUpdateWithoutMenteeInputSchema: z.ZodType<Prisma.RequestUpdateWithoutMenteeInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => RequestStatusSchema),z.lazy(() => EnumRequestStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  mentor: z.lazy(() => MentorUpdateOneWithoutRequestsNestedInputSchema).optional()
+}).strict();
+
+export const RequestUncheckedUpdateWithoutMenteeInputSchema: z.ZodType<Prisma.RequestUncheckedUpdateWithoutMenteeInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  status: z.union([ z.lazy(() => RequestStatusSchema),z.lazy(() => EnumRequestStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  mentorId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const MeetingsUpdateWithoutMenteeInputSchema: z.ZodType<Prisma.MeetingsUpdateWithoutMenteeInput> = z.object({
@@ -4159,6 +4874,68 @@ export const AvailabilityFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.Availabil
   where: AvailabilityWhereUniqueInputSchema,
 }).strict()
 
+export const RequestFindFirstArgsSchema: z.ZodType<Prisma.RequestFindFirstArgs> = z.object({
+  select: RequestSelectSchema.optional(),
+  include: RequestIncludeSchema.optional(),
+  where: RequestWhereInputSchema.optional(),
+  orderBy: z.union([ RequestOrderByWithRelationAndSearchRelevanceInputSchema.array(),RequestOrderByWithRelationAndSearchRelevanceInputSchema ]).optional(),
+  cursor: RequestWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ RequestScalarFieldEnumSchema,RequestScalarFieldEnumSchema.array() ]).optional(),
+}).strict()
+
+export const RequestFindFirstOrThrowArgsSchema: z.ZodType<Prisma.RequestFindFirstOrThrowArgs> = z.object({
+  select: RequestSelectSchema.optional(),
+  include: RequestIncludeSchema.optional(),
+  where: RequestWhereInputSchema.optional(),
+  orderBy: z.union([ RequestOrderByWithRelationAndSearchRelevanceInputSchema.array(),RequestOrderByWithRelationAndSearchRelevanceInputSchema ]).optional(),
+  cursor: RequestWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ RequestScalarFieldEnumSchema,RequestScalarFieldEnumSchema.array() ]).optional(),
+}).strict()
+
+export const RequestFindManyArgsSchema: z.ZodType<Prisma.RequestFindManyArgs> = z.object({
+  select: RequestSelectSchema.optional(),
+  include: RequestIncludeSchema.optional(),
+  where: RequestWhereInputSchema.optional(),
+  orderBy: z.union([ RequestOrderByWithRelationAndSearchRelevanceInputSchema.array(),RequestOrderByWithRelationAndSearchRelevanceInputSchema ]).optional(),
+  cursor: RequestWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: z.union([ RequestScalarFieldEnumSchema,RequestScalarFieldEnumSchema.array() ]).optional(),
+}).strict()
+
+export const RequestAggregateArgsSchema: z.ZodType<Prisma.RequestAggregateArgs> = z.object({
+  where: RequestWhereInputSchema.optional(),
+  orderBy: z.union([ RequestOrderByWithRelationAndSearchRelevanceInputSchema.array(),RequestOrderByWithRelationAndSearchRelevanceInputSchema ]).optional(),
+  cursor: RequestWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict()
+
+export const RequestGroupByArgsSchema: z.ZodType<Prisma.RequestGroupByArgs> = z.object({
+  where: RequestWhereInputSchema.optional(),
+  orderBy: z.union([ RequestOrderByWithAggregationInputSchema.array(),RequestOrderByWithAggregationInputSchema ]).optional(),
+  by: RequestScalarFieldEnumSchema.array(),
+  having: RequestScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict()
+
+export const RequestFindUniqueArgsSchema: z.ZodType<Prisma.RequestFindUniqueArgs> = z.object({
+  select: RequestSelectSchema.optional(),
+  include: RequestIncludeSchema.optional(),
+  where: RequestWhereUniqueInputSchema,
+}).strict()
+
+export const RequestFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.RequestFindUniqueOrThrowArgs> = z.object({
+  select: RequestSelectSchema.optional(),
+  include: RequestIncludeSchema.optional(),
+  where: RequestWhereUniqueInputSchema,
+}).strict()
+
 export const UserCreateArgsSchema: z.ZodType<Prisma.UserCreateArgs> = z.object({
   select: UserSelectSchema.optional(),
   include: UserIncludeSchema.optional(),
@@ -4403,4 +5180,45 @@ export const AvailabilityUpdateManyArgsSchema: z.ZodType<Prisma.AvailabilityUpda
 
 export const AvailabilityDeleteManyArgsSchema: z.ZodType<Prisma.AvailabilityDeleteManyArgs> = z.object({
   where: AvailabilityWhereInputSchema.optional(),
+}).strict()
+
+export const RequestCreateArgsSchema: z.ZodType<Prisma.RequestCreateArgs> = z.object({
+  select: RequestSelectSchema.optional(),
+  include: RequestIncludeSchema.optional(),
+  data: z.union([ RequestCreateInputSchema,RequestUncheckedCreateInputSchema ]).optional(),
+}).strict()
+
+export const RequestUpsertArgsSchema: z.ZodType<Prisma.RequestUpsertArgs> = z.object({
+  select: RequestSelectSchema.optional(),
+  include: RequestIncludeSchema.optional(),
+  where: RequestWhereUniqueInputSchema,
+  create: z.union([ RequestCreateInputSchema,RequestUncheckedCreateInputSchema ]),
+  update: z.union([ RequestUpdateInputSchema,RequestUncheckedUpdateInputSchema ]),
+}).strict()
+
+export const RequestCreateManyArgsSchema: z.ZodType<Prisma.RequestCreateManyArgs> = z.object({
+  data: z.union([ RequestCreateManyInputSchema,RequestCreateManyInputSchema.array() ]),
+  skipDuplicates: z.boolean().optional(),
+}).strict()
+
+export const RequestDeleteArgsSchema: z.ZodType<Prisma.RequestDeleteArgs> = z.object({
+  select: RequestSelectSchema.optional(),
+  include: RequestIncludeSchema.optional(),
+  where: RequestWhereUniqueInputSchema,
+}).strict()
+
+export const RequestUpdateArgsSchema: z.ZodType<Prisma.RequestUpdateArgs> = z.object({
+  select: RequestSelectSchema.optional(),
+  include: RequestIncludeSchema.optional(),
+  data: z.union([ RequestUpdateInputSchema,RequestUncheckedUpdateInputSchema ]),
+  where: RequestWhereUniqueInputSchema,
+}).strict()
+
+export const RequestUpdateManyArgsSchema: z.ZodType<Prisma.RequestUpdateManyArgs> = z.object({
+  data: z.union([ RequestUpdateManyMutationInputSchema,RequestUncheckedUpdateManyInputSchema ]),
+  where: RequestWhereInputSchema.optional(),
+}).strict()
+
+export const RequestDeleteManyArgsSchema: z.ZodType<Prisma.RequestDeleteManyArgs> = z.object({
+  where: RequestWhereInputSchema.optional(),
 }).strict()
