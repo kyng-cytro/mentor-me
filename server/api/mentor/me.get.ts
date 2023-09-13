@@ -17,7 +17,11 @@ export default eventHandler(async (event) => {
     return await prisma.mentor.findUnique({
       where: { id: user.id },
       include: {
-        user: true,
+        user: {
+          include: {
+            receivedMessages: { include: { sender: true }, take: 10 },
+          },
+        },
         mentees: { include: { user: true } },
         requests: {
           include: {

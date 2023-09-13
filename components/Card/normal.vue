@@ -11,7 +11,7 @@
         v-if="showIcon"
       />
       <div class="flex flex-col space-y-1 text-gray-800 dark:text-slate-200">
-        <span class="font-semibold">{{ title }}</span>
+        <span class="font-semibold line-clamp-1">{{ title }}</span>
         <span class="text-sm font-light">{{ subtitle }}</span>
       </div>
     </NuxtLink>
