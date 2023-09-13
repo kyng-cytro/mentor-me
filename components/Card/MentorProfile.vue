@@ -59,7 +59,7 @@ defineProps({
     <!-- Bio -->
     <div>
       <p
-        class="text-md font-light text-justify leading-snug break-words whitespace-pre-wrap"
+        class="text-md font-light text-justify leading-snug break-words whitespace-pre-wrap line-clamp-3"
       >
         {{ bio }}
       </p>

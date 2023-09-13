@@ -29,15 +29,26 @@ const {
       :show_refresh="true"
       :refreshing="pending"
       @refresh="refresh"
-      title="Messages"
+      title="Recent Messages"
       class="lg:col-span-1 lg:row-span-1"
-    ></Card>
+    >
+      <ContainersScrollY v-if="mentor">
+        <CardNormal
+          :key="message.id"
+          :full="true"
+          :title="message.content"
+          :subtitle="message.sender.name"
+          :to="`/mentor/mentees/${message.senderId}`"
+          v-for="message in mentor.user.receivedMessages"
+        />
+      </ContainersScrollY>
+    </Card>
     <Card
       :show_title="true"
       :show_refresh="true"
       :refreshing="pending"
       @refresh="refresh"
-      title="Mentees"
+      title="Current Mentees"
       class="lg:col-span-1 lg:row-span-1"
     >
       <ContainersScrollY v-if="mentor">
