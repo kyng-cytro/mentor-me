@@ -36,6 +36,7 @@ export default eventHandler(async (event) => {
         role: "MENTOR",
         mentor: {
           create: {
+            id: user.id,
             currentTitle: data.career_info.currentTitle,
             companyName: data.career_info.companyName,
             fieldOfExpertise: data.career_info.fieldOfExpertise,
