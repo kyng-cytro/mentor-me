@@ -10,6 +10,25 @@ const {
 } = await useFetch("/api/mentor/me", {
   lazy: true,
 });
+
+const loading = ref(false);
+
+const handle_update = async (args: string[]) => {
+  const [id, action] = args;
+
+  loading.value = true;
+  const { error } = useFetch("/api/requests/update", {
+    method: "POST",
+    body: { id, action },
+  });
+  loading.value = false;
+
+  if (error.value) {
+    console.log(error.value);
+  }
+
+  await refresh();
+};
 </script>
 
 <template>
@@ -19,11 +38,31 @@ const {
     <Card
       :show_title="true"
       :show_refresh="true"
-      :refreshing="pending"
+      :refreshing="pending || loading"
       @refresh="refresh"
-      title="Mentorship Requests"
+      title="Recent Requests"
       class="lg:col-span-2 lg:row-span-2"
-    ></Card>
+    >
+      <ContainersScrollY v-if="mentor">
+        <CardMenteeProfile
+          :key="request.id"
+          :id="request.id"
+          :status="request.status"
+          :bio="request.mentee.bio"
+          :name="request.mentee.user.name"
+          :image-url="`https://api.dicebear.com/5.x/initials/svg?seed=${request.mentee.user.name}`"
+          :dob="request.mentee.dob"
+          :education-level="request.mentee.educationLevel"
+          :skills="request.mentee.skills"
+          :career-goals="request.mentee.careerGoals"
+          :career-history="request.mentee.careerHistory"
+          :career-challenges="request.mentee.careerChallenges"
+          @approve="handle_update"
+          @decline="handle_update"
+          v-for="request in mentor.requests"
+        />
+      </ContainersScrollY>
+    </Card>
     <Card
       :show_title="true"
       :show_refresh="true"
