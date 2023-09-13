@@ -28,6 +28,7 @@ export default eventHandler(async (event) => {
         role: "MENTEE",
         mentee: {
           create: {
+            id: user.id,
             bio: data.education_info.bio,
             dob: data.basic_info.dob,
             careerGoals: data.career_info.career_goals,

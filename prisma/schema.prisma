@@ -16,18 +16,22 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  name         String
-  email        String   @unique
-  phone        String   @unique
-  active       Boolean  @default(true)
-  profileImage String?  @map("profile_image")
-  gender       String
-  role         Role     @default(MENTEE)
-  mentor       Mentor[]
-  mentee       Mentee[]
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+  id               String    @id @default(cuid())
+  name             String
+  email            String    @unique
+  phone            String    @unique
+  active           Boolean   @default(true)
+  profileImage     String?   @map("profile_image")
+  gender           String
+  role             Role      @default(MENTEE)
+  mentor           Mentor[]
+  mentee           Mentee[]
+  sentMessages     Message[] @relation("sent_messages")
+  receivedMessages Message[] @relation("received_messages")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  @@map("users")
 }
 
 model Mentor {
@@ -46,6 +50,8 @@ model Mentor {
   meetings          Meetings[]
   testimonials      Testimonial[]
   availabilities    Availability[]
+
+  @@map("mentors")
 }
 
 model Mentee {
@@ -63,6 +69,21 @@ model Mentee {
   requests         Request[]
   meetings         Meetings[]
   reviews          Testimonial[]
+
+  @@map("mentees")
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  content    String
+  sender     User     @relation("sent_messages", fields: [senderId], references: [id])
+  receiver   User     @relation("received_messages", fields: [receiverId], references: [id])
+  senderId   String
+  receiverId String
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("messages")
 }
 
 model Meetings {
@@ -76,17 +97,21 @@ model Meetings {
   menteeId  String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("meetings")
 }
 
 model Testimonial {
   id        String   @id @default(cuid())
   content   String
-  mentor    Mentor?  @relation(fields: [mentorId], references: [id])
-  mentorId  String?
-  mentee    Mentee?  @relation(fields: [menteeId], references: [id])
+  mentor    Mentor   @relation(fields: [mentorId], references: [id])
+  mentorId  String
+  mentee    Mentee   @relation(fields: [menteeId], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-  menteeId  String?
+  menteeId  String
+
+  @@map("testimonials")
 }
 
 model Availability {
@@ -94,23 +119,26 @@ model Availability {
   dayOfWeek String   @map("day_of_week")
   startTime String   @map("start_time")
   endTime   String   @map("end_time")
-  mentor    Mentor?  @relation(fields: [mentorId], references: [id])
-  mentorId  String?
+  mentor    Mentor   @relation(fields: [mentorId], references: [id])
+  mentorId  String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("availabilities")
 }
 
 model Request {
   id        String        @id @default(cuid())
   status    RequestStatus @default(PENDING)
-  mentee    Mentee?       @relation(fields: [menteeId], references: [id])
-  menteeId  String?
-  mentor    Mentor?       @relation(fields: [mentorId], references: [id])
-  mentorId  String?
+  mentee    Mentee        @relation(fields: [menteeId], references: [id])
+  menteeId  String
+  mentor    Mentor        @relation(fields: [mentorId], references: [id])
+  mentorId  String
   createdAt DateTime      @default(now()) @map("created_at")
   updatedAt DateTime      @default(now()) @updatedAt @map("updated_at")
 
   @@unique([mentorId, menteeId])
+  @@map("requests")
 }
 
 enum RequestStatus {

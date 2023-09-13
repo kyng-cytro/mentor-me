@@ -1,5 +1,5 @@
-import { serverSupabaseUser } from "#supabase/server";
 import prisma_client from "~/lib/prisma";
+import { serverSupabaseUser } from "#supabase/server";
 
 const prisma = prisma_client;
 
@@ -13,27 +13,24 @@ export default eventHandler(async (event) => {
     });
   }
 
-  const { id } = await readBody(event);
-
-  if (!id) {
-    throw createError({
-      statusCode: 401,
-      message: "Mentor ID is required",
-    });
-  }
-
   try {
-    return await prisma.request.create({
-      data: {
-        menteeId: user.id,
-        mentorId: id,
+    return await prisma.mentor.findUnique({
+      where: { id: user.id },
+      include: {
+        user: true,
+        mentees: { include: { user: true } },
+        requests: {
+          include: {
+            mentee: { include: { user: true } },
+          },
+        },
       },
     });
   } catch (e) {
     console.error(e);
     throw createError({
       statusCode: 400,
-      message: "Something Went Wrong",
+      message: "Something Went Wronng",
     });
   }
 });

@@ -507,7 +507,7 @@ const removeSlot = (index: number) => {
                   </div>
                 </div>
                 <div class="mb-6 flex justify-end">
-                  <ButtonsText @click="addSlot" text="Add Slot" />
+                  <ButtonsText @click.prevent="addSlot" text="Add Slot" />
                 </div>
               </div>
             </div>
