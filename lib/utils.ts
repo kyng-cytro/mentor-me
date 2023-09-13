@@ -127,3 +127,24 @@ export const weekDays: string[] = [
   "Sat",
   "Sun",
 ];
+
+export const calculateAge = (dob: string): number => {
+  try {
+    const dobDate: Date = new Date(dob);
+    const currentDate: Date = new Date();
+
+    let age: number = currentDate.getFullYear() - dobDate.getFullYear();
+
+    if (
+      currentDate.getMonth() < dobDate.getMonth() ||
+      (currentDate.getMonth() === dobDate.getMonth() &&
+        currentDate.getDate() < dobDate.getDate())
+    ) {
+      age--; // Subtract 1 year if the birthday hasn't occurred yet this year
+    }
+
+    return age;
+  } catch (error) {
+    return 0;
+  }
+};
