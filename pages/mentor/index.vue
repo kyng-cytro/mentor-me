@@ -77,7 +77,7 @@ const handle_update = async (args: string[]) => {
           :full="true"
           :title="message.content"
           :subtitle="message.sender.name"
-          :to="`/mentor/mentees/${message.senderId}`"
+          :to="`/messaging/${message.senderId}`"
           v-for="message in mentor.user.receivedMessages"
         />
       </ContainersScrollY>
@@ -96,7 +96,7 @@ const handle_update = async (args: string[]) => {
           :full="true"
           :title="mentee.user.name"
           :subtitle="mentee.user.email"
-          :to="`/mentor/mentees/${mentee.id}`"
+          :to="`/messaging/${mentee.id}`"
           v-for="mentee in mentor.mentees"
         />
       </ContainersScrollY>

@@ -49,14 +49,14 @@ const results = useDebounce(
       <CardNormal
         :key="mentor.id"
         :full="true"
-        :to="`/mentor/mentees/${mentor.id}`"
+        :to="`/messaging/${mentor.id}`"
         :title="mentor.user.name"
         :subtitle="mentor.user.email"
         v-for="mentor in results"
       />
       <div
         class="h-[80%] flex flex-col items-center justify-center gap-6"
-        v-if="!results.length"
+        v-if="!results.length && !pending"
       >
         <NuxtImg class="h-24 w-24" src="/images/not-found.png" placeholder />
         <p class="font-semibold text-md capitalize">

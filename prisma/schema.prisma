@@ -78,8 +78,8 @@ model Message {
   content    String
   sender     User     @relation("sent_messages", fields: [senderId], references: [id])
   receiver   User     @relation("received_messages", fields: [receiverId], references: [id])
-  senderId   String
-  receiverId String
+  senderId   String   @map("sender_id")
+  receiverId String   @map("receiver_id")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
