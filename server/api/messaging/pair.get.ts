@@ -15,6 +15,13 @@ export default eventHandler(async (event) => {
 
   const { guestId }: { guestId: string } = await getQuery(event);
 
+  if (!guestId) {
+    throw createError({
+      statusCode: 400,
+      message: "Guest ID  is missing",
+    });
+  }
+
   try {
     return await prisma.message.findMany({
       where: {
@@ -28,6 +35,7 @@ export default eventHandler(async (event) => {
         sender: { select: { name: true, profileImage: true } },
         receiver: { select: { name: true, profileImage: true } },
       },
+      orderBy: { createdAt: "asc" },
     });
   } catch (e) {
     console.error(e);

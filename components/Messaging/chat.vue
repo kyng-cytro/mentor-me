@@ -4,6 +4,8 @@ defineProps({
   text: String,
   imageUrl: String,
   isUser: Boolean,
+  pending: Boolean,
+  error: Boolean,
 });
 </script>
 <template>
@@ -15,8 +17,13 @@ defineProps({
       <div>
         <span
           :class="{
-            'bg-gray-300 text-gray-600 rounded-bl-none': !isUser,
-            'bg-blue-500 dark:bg-blue-600 text-white rounded-br-none': isUser,
+            'bg-red-50 text-red-800 dark:text-red-400 dark:bg-slate-600 rounded-br-none':
+              error,
+            'bg-gray-300 text-gray-600 rounded-br-none animate-pulse': pending,
+            'bg-gray-300 text-gray-600 rounded-bl-none':
+              !isUser && !pending && !error,
+            'bg-blue-500 dark:bg-blue-600 text-white rounded-br-none':
+              isUser && !pending && !error,
           }"
           class="px-4 py-2 rounded-lg inline-block"
           >{{ text }}</span
