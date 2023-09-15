@@ -12,7 +12,7 @@ const toDashboard = async () => {
 
 <template>
   <section class="relative bg-slate-700">
-    <Particles />
+    <div><Particles /></div>
     <div
       class="relative z-20 mx-auto max-w-screen-xl px-4 py-24 text-center lg:py-56"
     >

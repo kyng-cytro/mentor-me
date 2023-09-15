@@ -19,7 +19,12 @@ export default eventHandler(async (event) => {
       include: {
         user: {
           include: {
-            receivedMessages: { include: { sender: true }, take: 10 },
+            receivedMessages: {
+              distinct: ["senderId"],
+              include: { sender: { select: { name: true } } },
+              take: 10,
+              orderBy: { createdAt: "desc" }, // desc cause we only care about the last message,
+            },
           },
         },
         mentees: { include: { user: true } },

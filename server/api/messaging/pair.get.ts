@@ -35,7 +35,7 @@ export default eventHandler(async (event) => {
         sender: { select: { name: true, profileImage: true } },
         receiver: { select: { name: true, profileImage: true } },
       },
-      orderBy: { createdAt: "asc" },
+      orderBy: { createdAt: "asc" }, // asc cause we want it properly arraged,
     });
   } catch (e) {
     console.error(e);
