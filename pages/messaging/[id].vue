@@ -1,31 +1,39 @@
 <script setup lang="ts">
+import { createUniqueID } from "~/lib/utils";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
 const user = useSupabaseUser();
 
 const client = useSupabaseClient();
 
-const { id: guestId } = useRoute().params;
+const { id: guestId } = <{ id: string }>useRoute().params;
 
 const sending = ref(false);
 
+const guestTyping = ref(false);
+
 const send_error = ref({ status: false, message: "" });
 
+// Get guest info
 const { data: guestInfo } = useFetch("/api/users/get-user", {
   params: { id: guestId },
 });
 
+// Get messages from db
 const { data: messages, refresh } = useFetch("/api/messaging/pair", {
   params: { guestId },
 });
 
-let channel: RealtimeChannel;
+let messageChannel: RealtimeChannel;
+
+let typingChannel: RealtimeChannel;
 
 onMounted(() => {
   // Scroll when use hits the page
   scroll_to_bottom();
 
-  channel = client
+  // Listen for messages added to db
+  messageChannel = client
     .channel("messages")
     .on(
       "postgres_changes",
@@ -42,8 +50,26 @@ onMounted(() => {
       },
     )
     .subscribe();
+
+  // Listen for tying broadcast on custom channel
+  typingChannel = client
+    .channel(createUniqueID(user.value?.id, guestId))
+    .on("broadcast", { event: "MESSAGE" }, (payload) => {
+      guestTyping.value = payload.payload.isTyping;
+    })
+    .subscribe();
 });
 
+// Send broadcast typing status
+const is_typing = async (isTyping: boolean) => {
+  typingChannel.send({
+    type: "broadcast",
+    event: "MESSAGE",
+    payload: { isTyping },
+  });
+};
+
+// Scroll screen
 const scroll_to_bottom = () => {
   const container = document.querySelector("#container");
   if (container) {
@@ -54,6 +80,7 @@ const scroll_to_bottom = () => {
   }
 };
 
+// Send message
 const handle_send = async (content: string) => {
   if (!content) return;
 
@@ -86,8 +113,10 @@ const handle_send = async (content: string) => {
   }
 };
 
+// Graceful shutdown
 onUnmounted(() => {
-  client.removeChannel(channel);
+  client.removeChannel(messageChannel);
+  client.removeChannel(typingChannel);
 });
 </script>
 <style>
@@ -120,11 +149,13 @@ onUnmounted(() => {
       />
       <!-- Messages -->
       <ContainersScrollY id="container" class="flex-1" v-if="guestInfo">
+        <!-- Animations -->
         <TransitionGroup
           class="flex flex-col space-y-4 p-3"
           name="list"
           tag="div"
         >
+          <!-- Messages -->
           <MessagingChat
             :key="message.id"
             :image-url="
@@ -136,6 +167,7 @@ onUnmounted(() => {
             v-for="message in messages"
           />
 
+          <!-- Messages Loading -->
           <MessagingChat
             key="pending"
             :pending="true"
@@ -146,6 +178,7 @@ onUnmounted(() => {
           />
           <div class="hidden" v-else />
 
+          <!-- Messages Error -->
           <MessagingChat
             key="error"
             :image-url="`https://api.dicebear.com/5.x/initials/svg?seed=??`"
@@ -155,10 +188,29 @@ onUnmounted(() => {
             v-if="send_error.status"
           />
           <div class="hidden" v-else />
+
+          <!-- User Typing-->
+          <MessagingChat
+            key="typing"
+            :image-url="
+              guestInfo.profileImage ??
+              `https://api.dicebear.com/5.x/initials/svg?seed=${guestInfo.name}`
+            "
+            text="Typing..."
+            :typing="true"
+            :is-user="false"
+            v-if="guestTyping"
+          />
+
+          <div class="hidden" v-else />
         </TransitionGroup>
       </ContainersScrollY>
       <!-- Input -->
-      <MessagingInput @send_message="handle_send" v-if="guestInfo" />
+      <MessagingInput
+        @typing="is_typing"
+        @send_message="handle_send"
+        v-if="guestInfo"
+      />
     </Card>
     <Card class="row-span-1 lg:col-span-1 lg:rown-span-1" />
   </div>
