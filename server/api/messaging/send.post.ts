@@ -13,21 +13,19 @@ export default eventHandler(async (event) => {
     });
   }
 
-  const { id }: { id: string } = await readBody(event);
+  const { guestId, content }: { guestId: string; content: string } =
+    await readBody(event);
 
-  if (!id) {
+  if (!guestId || !content) {
     throw createError({
-      statusCode: 401,
-      message: "Mentor ID is required",
+      statusCode: 400,
+      message: "Guest ID or Content is missing",
     });
   }
 
   try {
-    return await prisma.request.create({
-      data: {
-        menteeId: user.id,
-        mentorId: id,
-      },
+    return await prisma.message.create({
+      data: { senderId: user.id, receiverId: guestId, content },
     });
   } catch (e) {
     console.error(e);

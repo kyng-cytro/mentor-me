@@ -13,7 +13,8 @@ export default eventHandler(async (event) => {
     });
   }
 
-  const { id, action } = await readBody(event);
+  const { id, action }: { id: string; action: "decline" | "approve" } =
+    await readBody(event);
 
   if (!id) {
     throw createError({

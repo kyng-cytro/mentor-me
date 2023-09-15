@@ -3,9 +3,7 @@ import prisma_client from "~/lib/prisma";
 const prisma = prisma_client;
 
 export default eventHandler(async (event) => {
-  const params = getQuery(event);
-
-  const id = params.id as string;
+  const { id }: { id: string } = getQuery(event);
 
   try {
     return await prisma.user.findUnique({
