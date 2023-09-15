@@ -1,10 +1,11 @@
 <script setup lang="ts">
 const content = ref("");
 
-const emit = defineEmits(["send_message"]);
+const emit = defineEmits(["send_message", "typing"]);
 
 const send_message = () => {
   if (!content) return;
+  emit("typing", false);
   emit("send_message", content.value);
   content.value = "";
 };
@@ -18,6 +19,8 @@ const send_message = () => {
       id="message"
       v-model.trim="content"
       @keypress.exact.enter.prevent="send_message"
+      @focus="$emit('typing', true)"
+      @focusout="$emit('typing', false)"
       class="hide-scroll-bar block w-full rounded-lg border border-gray-300 bg-gray-50 px-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
       placeholder="Write your message!"
       required

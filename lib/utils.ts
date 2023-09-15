@@ -140,11 +140,24 @@ export const calculateAge = (dob: string): number => {
       (currentDate.getMonth() === dobDate.getMonth() &&
         currentDate.getDate() < dobDate.getDate())
     ) {
-      age--; // Subtract 1 year if the birthday hasn't occurred yet this year
+      age--;
     }
 
     return age;
   } catch (error) {
     return 0;
   }
+};
+
+export const createUniqueID = (
+  userID: string | undefined,
+  guestID: string | undefined,
+) => {
+  if (!userID || !guestID) {
+    return "public";
+  }
+
+  const sortedIDs = [userID, guestID].sort();
+  const uniqueID = sortedIDs.join("_");
+  return uniqueID;
 };
