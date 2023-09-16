@@ -59,6 +59,10 @@ export default defineNuxtConfig({
   tailwindcss: {
     config: {},
   },
+  runtimeConfig: {
+    wherebyEndpoint: "",
+    wherebyApiKey: "",
+  },
   vite: {
     resolve: {
       // To fix prisma issue

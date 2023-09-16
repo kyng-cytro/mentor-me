@@ -13,6 +13,15 @@ export default eventHandler(async (event) => {
     });
   }
 
+  const userInfo = await prisma.user.findUnique({ where: { id: user.id } });
+
+  if (!userInfo || !userInfo.active) {
+    throw createError({
+      statusCode: 401,
+      message: "Not enough privilages",
+    });
+  }
+
   try {
     return await prisma.mentor.findUnique({
       where: { id: user.id },

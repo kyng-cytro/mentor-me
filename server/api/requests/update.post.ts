@@ -16,10 +16,19 @@ export default eventHandler(async (event) => {
   const { id, action }: { id: string; action: "decline" | "approve" } =
     await readBody(event);
 
-  if (!id) {
+  if (!id || !action) {
     throw createError({
       statusCode: 401,
-      message: "Request ID is required",
+      message: "Request ID & Action is required",
+    });
+  }
+
+  const userInfo = await prisma.user.findUnique({ where: { id: user.id } });
+
+  if (!userInfo || !userInfo.active) {
+    throw createError({
+      statusCode: 401,
+      message: "Not enough privilages",
     });
   }
 

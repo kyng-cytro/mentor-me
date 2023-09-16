@@ -11,7 +11,7 @@ const searchStore = useSearchStore();
 
 const { data } = storeToRefs(searchStore);
 
-const { data: response, pending } = useFetch("/api/mentor/all", {
+const { data: response, pending } = await useFetch("/api/mentor/all", {
   query: data,
 });
 </script>

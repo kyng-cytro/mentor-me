@@ -3,6 +3,12 @@ const content = ref("");
 
 const emit = defineEmits(["send_message", "typing"]);
 
+const input = ref();
+
+onStartTyping(() => {
+  if (!input.value.active) input.value.focus();
+});
+
 const send_message = () => {
   if (!content) return;
   emit("typing", false);
@@ -17,6 +23,7 @@ const send_message = () => {
     <textarea
       name="message"
       id="message"
+      ref="input"
       v-model.trim="content"
       @keypress.exact.enter.prevent="send_message"
       @focus="$emit('typing', true)"

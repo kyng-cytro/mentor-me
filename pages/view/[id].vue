@@ -3,7 +3,7 @@ const user = useSupabaseUser();
 
 const { id } = useRoute().params;
 
-const { data: mentor, refresh } = useFetch("/api/mentor/mentor", {
+const { data: mentor, refresh } = await useFetch("/api/mentor/mentor", {
   query: { id },
 });
 

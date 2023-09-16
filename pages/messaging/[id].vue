@@ -10,17 +10,14 @@ const { id: guestId } = <{ id: string }>useRoute().params;
 
 const sending = ref(false);
 
+const loading = ref(false);
+
 const guestTyping = ref(false);
 
 const send_error = ref({ status: false, message: "" });
 
-// Get guest info
-const { data: guestInfo } = useFetch("/api/users/get-user", {
-  params: { id: guestId },
-});
-
 // Get messages from db
-const { data: messages, refresh } = useFetch("/api/messaging/pair", {
+const { data, refresh } = await useFetch("/api/messaging/pair", {
   params: { guestId },
 });
 
@@ -44,9 +41,14 @@ onMounted(() => {
       },
       async () => {
         await refresh();
-
-        //
         scroll_to_bottom();
+      },
+    )
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "meetings" },
+      async () => {
+        await refresh();
       },
     )
     .subscribe();
@@ -113,6 +115,24 @@ const handle_send = async (content: string) => {
   }
 };
 
+// Create room
+const handle_create_room = async () => {
+  loading.value = true;
+
+  const { error } = await useFetch("/api/meetings/add", {
+    method: "POST",
+    body: { guestId },
+  });
+
+  loading.value = false;
+
+  if (error.value) {
+    return console.log(error.value.data.message);
+  }
+
+  return;
+};
+
 // Graceful shutdown
 onUnmounted(() => {
   client.removeChannel(messageChannel);
@@ -135,83 +155,117 @@ onUnmounted(() => {
     class="grid h-full grid-cols-1 grid-rows-4 lg:grid-cols-3 lg:grid-rows-1 min-h-screen md:min-h-full gap-6"
   >
     <Card
-      class="flex flex-col justify-between row-span-3 lg:col-span-2 lg:row-span-1"
+      class="flex flex-col justify-between row-span-3 col-span-1 lg:col-span-2 lg:row-span-1"
     >
       <!-- Header -->
       <MessagingHeader
         :image-url="
-          guestInfo.profileImage ??
-          `https://api.dicebear.com/5.x/initials/svg?seed=${guestInfo?.name}`
+          data.guestInfo.profileImage ??
+          `https://api.dicebear.com/5.x/initials/svg?seed=${data.guestInfo.name}`
         "
-        :name="guestInfo.name"
-        :role="guestInfo.role"
-        v-if="guestInfo"
+        :name="data.guestInfo.name"
+        :role="data.guestInfo.role"
+        v-if="data"
       />
       <!-- Messages -->
-      <ContainersScrollY id="container" class="flex-1" v-if="guestInfo">
+      <ContainersScrollY id="container" class="flex-1" v-if="data">
         <!-- Animations -->
-        <TransitionGroup
-          class="flex flex-col space-y-4 p-3"
-          name="list"
-          tag="div"
-        >
-          <!-- Messages -->
-          <MessagingChat
-            :key="message.id"
-            :image-url="
-              message.sender.profileImage ??
-              `https://api.dicebear.com/5.x/initials/svg?seed=${message.sender.name}`
-            "
-            :text="message.content"
-            :is-user="message.senderId === user?.id"
-            v-for="message in messages"
-          />
+        <ClientOnly>
+          <TransitionGroup
+            class="flex flex-col space-y-4 p-3"
+            name="list"
+            tag="div"
+          >
+            <!-- Messages -->
+            <MessagingChat
+              :key="message.id"
+              :image-url="
+                message.sender.profileImage ??
+                `https://api.dicebear.com/5.x/initials/svg?seed=${message.sender.name}`
+              "
+              :text="message.content"
+              :is-user="message.senderId === user?.id"
+              v-for="message in data.messages"
+            />
 
-          <!-- Messages Loading -->
-          <MessagingChat
-            key="pending"
-            :pending="true"
-            :image-url="`https://api.dicebear.com/5.x/initials/svg?seed=??`"
-            text="Sending..."
-            :is-user="true"
-            v-if="sending"
-          />
-          <div class="hidden" v-else />
+            <!-- Messages Loading -->
+            <MessagingChat
+              key="pending"
+              :pending="true"
+              :image-url="
+                data.userInfo.profileImage ??
+                `https://api.dicebear.com/5.x/initials/svg?seed=${data.userInfo.name}`
+              "
+              text="Sending..."
+              :is-user="true"
+              v-if="sending"
+            />
 
-          <!-- Messages Error -->
-          <MessagingChat
-            key="error"
-            :image-url="`https://api.dicebear.com/5.x/initials/svg?seed=??`"
-            :text="`Error sending message: ${send_error.message}`"
-            :is-user="true"
-            :error="true"
-            v-if="send_error.status"
-          />
-          <div class="hidden" v-else />
+            <!-- Messages Error -->
+            <MessagingChat
+              key="error"
+              :image-url="
+                data.userInfo.profileImage ??
+                `https://api.dicebear.com/5.x/initials/svg?seed=${data.userInfo.name}`
+              "
+              :text="`Error sending message: ${send_error.message}`"
+              :is-user="true"
+              :error="true"
+              v-if="send_error.status"
+            />
 
-          <!-- User Typing-->
-          <MessagingChat
-            key="typing"
-            :image-url="
-              guestInfo.profileImage ??
-              `https://api.dicebear.com/5.x/initials/svg?seed=${guestInfo.name}`
-            "
-            text="Typing..."
-            :typing="true"
-            :is-user="false"
-            v-if="guestTyping"
-          />
-
-          <div class="hidden" v-else />
-        </TransitionGroup>
+            <!-- User Typing-->
+            <MessagingChat
+              key="typing"
+              :image-url="
+                data.guestInfo.profileImage ??
+                `https://api.dicebear.com/5.x/initials/svg?seed=${data.guestInfo.name}`
+              "
+              :text="`${data.userInfo.name} is  typing...`"
+              :typing="true"
+              :is-user="false"
+              v-if="guestTyping"
+            />
+          </TransitionGroup>
+        </ClientOnly>
       </ContainersScrollY>
       <!-- Input -->
       <MessagingInput
         @typing="is_typing"
         @send_message="handle_send"
-        v-if="guestInfo"
+        v-if="data"
       />
     </Card>
-    <Card class="row-span-1 lg:col-span-1 lg:rown-span-1" />
+    <Card class="row-span-1 col-span-1 lg:col-span-1 lg:row-span-1">
+      <div class="space-y-3" v-if="data">
+        <p class="text-lg font-semibold">Join Meeting</p>
+        <NuxtLink
+          :to="`/meeting?roomId=${
+            data.userInfo.role === 'MENTOR'
+              ? data.meeting.hostUrl
+              : data.meeting.guestUrl
+          }&name=${data.userInfo.name}`"
+          class="bg-slate-500 w-full font-medium text-sm rounded-lg p-6 border border-slate-300 dark:border-slate-600 flex flex-col justify-center items-center duration-300 ease-in-out hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:hover:bg-slate-600 dark:focus:bg-slate-600"
+          v-if="data.meeting"
+        >
+          Go To Meeting Room
+        </NuxtLink>
+        <button
+          @click="handle_create_room"
+          class="w-full font-medium text-sm rounded-lg p-6 border border-slate-300 dark:border-slate-600 flex flex-col justify-center items-center duration-300 ease-in-out hover:bg-slate-200 focus:bg-slate-200 focus:outline-none dark:hover:bg-slate-600 dark:focus:bg-slate-600"
+          :class="{ 'animate-pulse': loading }"
+          :disabled="loading"
+          v-else-if="data.userInfo.role === 'MENTOR'"
+        >
+          {{ loading ? "Creating..." : "Create New Meeting Room" }}
+        </button>
+        <p
+          class="w-full font-medium text-sm rounded-lg p-6 border border-slate-300 dark:border-slate-600 flex flex-col justify-center items-center"
+          v-else
+        >
+          Waiting For Mentor To Create A Room...
+        </p>
+      </div>
+    </Card>
   </div>
 </template>
