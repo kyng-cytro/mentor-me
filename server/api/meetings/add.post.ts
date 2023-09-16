@@ -35,8 +35,6 @@ export default eventHandler(async (event) => {
   try {
     const res = await create_room();
 
-    console.log(res);
-
     if (!res) {
       throw createError({
         statusCode: 401,
