@@ -23,7 +23,18 @@ export default eventHandler(async (event) => {
   }
 
   try {
-    return await prisma.message.findMany({
+    const userInfo = await prisma.user.findUnique({ where: { id: user.id } });
+
+    const guestInfo = await prisma.user.findUnique({ where: { id: guestId } });
+
+    if (!userInfo || !guestInfo) {
+      throw createError({
+        statusCode: 400,
+        message: "User or Guest ID is invalid",
+      });
+    }
+
+    const messages = await prisma.message.findMany({
       where: {
         OR: [
           { senderId: { equals: user.id }, receiverId: { equals: guestId } },
@@ -37,6 +48,17 @@ export default eventHandler(async (event) => {
       },
       orderBy: { createdAt: "asc" }, // asc cause we want it properly arraged,
     });
+
+    const meeting = await prisma.meeting.findUnique({
+      where: {
+        menteeId_mentorId: {
+          mentorId: userInfo.role === "MENTOR" ? userInfo.id : guestInfo.id,
+          menteeId: userInfo.role === "MENTEE" ? userInfo.id : guestInfo.id,
+        },
+      },
+    });
+
+    return { userInfo, guestInfo, messages, meeting };
   } catch (e) {
     console.error(e);
     throw createError({

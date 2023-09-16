@@ -17,7 +17,7 @@ const handle_update = async (args: string[]) => {
   const [id, action] = args;
 
   loading.value = true;
-  const { error } = useFetch("/api/requests/update", {
+  const { error } = await useFetch("/api/requests/update", {
     method: "POST",
     body: { id, action },
   });

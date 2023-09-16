@@ -15,6 +15,22 @@ export default eventHandler(async (event) => {
 
   const { id }: { id: string } = getQuery(event);
 
+  if (!id) {
+    throw createError({
+      statusCode: 400,
+      message: "ID is required",
+    });
+  }
+
+  const userInfo = await prisma.user.findUnique({ where: { id: user.id } });
+
+  if (!userInfo || !userInfo.active) {
+    throw createError({
+      statusCode: 401,
+      message: "Not enough privilages",
+    });
+  }
+
   try {
     return await prisma.mentor.findUnique({
       where: { id },

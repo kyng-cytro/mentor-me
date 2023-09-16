@@ -47,7 +47,7 @@ model Mentor {
   userId            String
   mentees           Mentee[]
   requests          Request[]
-  meetings          Meetings[]
+  meetings          Meeting[]
   testimonials      Testimonial[]
   availabilities    Availability[]
 
@@ -67,7 +67,7 @@ model Mentee {
   userId           String
   mentors          Mentor[]
   requests         Request[]
-  meetings         Meetings[]
+  meetings         Meeting[]
   reviews          Testimonial[]
 
   @@map("mentees")
@@ -86,11 +86,12 @@ model Message {
   @@map("messages")
 }
 
-model Meetings {
+model Meeting {
   id        String   @id @default(cuid())
-  date      DateTime
-  startTime DateTime @map("start_time")
-  endTime   DateTime @map("end_time")
+  endDate   DateTime @map("end_date")
+  wherebyId String   @map("whereby_id")
+  hostUrl   String   @map("host_url")
+  guestUrl  String   @map("guest_url")
   mentor    Mentor   @relation(fields: [mentorId], references: [id])
   mentee    Mentee   @relation(fields: [menteeId], references: [id])
   mentorId  String
@@ -98,6 +99,7 @@ model Meetings {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
+  @@unique([menteeId, mentorId])
   @@map("meetings")
 }
 
