@@ -9,15 +9,13 @@ const { roomId, name } = <{ roomId: string; name: string }>useRoute().query;
 </script>
 <template>
   <div class="grid h-full min-h-screen grid-cols-1 grid-rows-1 md:min-h-full">
-    <Card>
-      <ClientOnly>
-        <whereby-embed
-          class="h-full"
-          @leave="router.back()"
-          :room="roomId"
-          :displayName="name"
-        />
-      </ClientOnly>
-    </Card>
+    <ClientOnly>
+      <whereby-embed
+        class="h-full"
+        @leave="router.back()"
+        :room="roomId"
+        :displayName="name"
+      />
+    </ClientOnly>
   </div>
 </template>
