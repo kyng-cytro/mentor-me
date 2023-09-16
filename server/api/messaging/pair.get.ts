@@ -49,11 +49,12 @@ export default eventHandler(async (event) => {
       orderBy: { createdAt: "asc" }, // asc cause we want it properly arraged,
     });
 
-    const meeting = await prisma.meeting.findUnique({
+    const meeting = await prisma.meeting.findFirst({
       where: {
-        menteeId_mentorId: {
-          mentorId: userInfo.role === "MENTOR" ? userInfo.id : guestInfo.id,
-          menteeId: userInfo.role === "MENTEE" ? userInfo.id : guestInfo.id,
+        mentorId: userInfo.role === "MENTOR" ? userInfo.id : guestInfo.id,
+        menteeId: userInfo.role === "MENTEE" ? userInfo.id : guestInfo.id,
+        endDate: {
+          gte: new Date(),
         },
       },
     });
