@@ -6,6 +6,8 @@ const user = useSupabaseUser();
 
 const client = useSupabaseClient();
 
+const focused = useWindowFocus();
+
 const { id: guestId } = <{ id: string }>useRoute().params;
 
 const sending = ref(false);
@@ -39,6 +41,18 @@ onMounted(() => {
       async () => {
         await refresh();
         scroll_to_bottom();
+
+        if (!focused.value) {
+          const { isSupported, show } = useWebNotification({
+            title: `New message from ${data.value?.guestInfo.name.toLocaleLowerCase()}`,
+            dir: "auto",
+            lang: "en",
+            renotify: true,
+            tag: "test",
+          });
+
+          if (isSupported.value) show();
+        }
       },
     )
     .on(
@@ -169,66 +183,65 @@ onUnmounted(() => {
         v-if="data"
       />
       <!-- Messages -->
+
       <ContainersScrollY id="container" class="flex-1" v-if="data">
         <!-- Animations -->
-        <ClientOnly>
-          <TransitionGroup
-            class="flex flex-col space-y-4 p-3"
-            name="list"
-            tag="div"
-          >
-            <!-- Messages -->
-            <MessagingChat
-              :key="message.id"
-              :image-url="
-                message.sender.profileImage ??
-                `https://api.dicebear.com/5.x/initials/svg?seed=${message.sender.name}`
-              "
-              :text="message.content"
-              :is-user="message.senderId === user?.id"
-              v-for="message in data.messages"
-            />
+        <TransitionGroup
+          class="flex flex-col space-y-4 p-3"
+          name="list"
+          tag="div"
+        >
+          <!-- Messages -->
+          <MessagingChat
+            :key="message.id"
+            :image-url="
+              message.sender.profileImage ??
+              `https://api.dicebear.com/5.x/initials/svg?seed=${message.sender.name}`
+            "
+            :text="message.content"
+            :is-user="message.senderId === user?.id"
+            v-for="message in data.messages"
+          />
 
-            <!-- Messages Loading -->
-            <MessagingChat
-              key="pending"
-              :pending="true"
-              :image-url="
-                data.userInfo.profileImage ??
-                `https://api.dicebear.com/5.x/initials/svg?seed=${data.userInfo.name}`
-              "
-              text="Sending..."
-              :is-user="true"
-              v-if="sending"
-            />
+          <!-- Messages Loading -->
+          <MessagingChat
+            key="pending"
+            :pending="true"
+            :image-url="
+              data.userInfo.profileImage ??
+              `https://api.dicebear.com/5.x/initials/svg?seed=${data.userInfo.name}`
+            "
+            text="Sending..."
+            :is-user="true"
+            v-if="sending"
+          />
 
-            <!-- Messages Error -->
-            <MessagingChat
-              key="error"
-              :image-url="
-                data.userInfo.profileImage ??
-                `https://api.dicebear.com/5.x/initials/svg?seed=${data.userInfo.name}`
-              "
-              :text="`Error sending message: ${send_error.message}`"
-              :is-user="true"
-              :error="true"
-              v-if="send_error.status"
-            />
+          <!-- Messages Error -->
+          <MessagingChat
+            key="error"
+            :image-url="
+              data.userInfo.profileImage ??
+              `https://api.dicebear.com/5.x/initials/svg?seed=${data.userInfo.name}`
+            "
+            :text="`Error sending message: ${send_error.message}`"
+            :is-user="true"
+            :error="true"
+            v-if="send_error.status"
+          />
 
-            <!-- User Typing-->
-            <MessagingChat
-              key="typing"
-              :image-url="
-                data.guestInfo.profileImage ??
-                `https://api.dicebear.com/5.x/initials/svg?seed=${data.guestInfo.name}`
-              "
-              :text="`${data.userInfo.name} is  typing...`"
-              :typing="true"
-              :is-user="false"
-              v-if="guestTyping"
-            />
-          </TransitionGroup>
-        </ClientOnly>
+          <!-- User Typing-->
+          <MessagingChat
+            key="typing"
+            :image-url="
+              data.guestInfo.profileImage ??
+              `https://api.dicebear.com/5.x/initials/svg?seed=${data.guestInfo.name}`
+            "
+            :text="`${data.userInfo.name} is  typing...`"
+            :typing="true"
+            :is-user="false"
+            v-if="guestTyping"
+          />
+        </TransitionGroup>
       </ContainersScrollY>
       <!-- Input -->
       <MessagingInput
