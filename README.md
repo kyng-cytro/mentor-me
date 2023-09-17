@@ -1,36 +1,36 @@
-# MentorMe
+# Mentor Me
 
-MentorMe is a career mentorship platform that connects aspiring professionals with experienced mentors in their desired field. Our platform helps users find the right mentor to guide them on their career journey, providing support, advice, and valuable insights along the way.
+Mentor Me is a career mentorship platform that connects aspiring professionals with experienced mentors in their desired field. Our platform helps users find the right mentor to guide them on their career journey, providing support, advice, and valuable insights along the way.
 
 ## Features
 
-Some of the features of MentorMe include:
+Some of the features of Mentor Me include:
 
 - User registration and verification
 - Mentor registration and verification
 - Mentor matching based on user criteria
 - Direct messaging between users and mentors
-- Schedule mentoring sessions with mentors
-- Payment processing for mentorship services
+- Whereby for video conferencing
+- Kanban for mentee tasks
 
 ## Technologies Used
 
-MentorMe is built using the following technologies:
+Mentor Me is built using the following technologies:
 
-- [Nuxt](https://nuxtjs.org/) for server-side rendering and frontend development
+- [Nuxt](https://nuxtjs.org/) for server-side rendering and front-end development
 - [Tailwind CSS](https://tailwindcss.com/) for styling
-- [Supabase](https://supabase.io/) for backend and database management
+- [Supabase](https://supabase.io/) for back-end and database management
 - [Prisma](https://www.prisma.io/) for ORM and database modeling
 
 ## TODO
 
-- [ ] User registration and verification
-- [ ] Mentor registration and verification
-- [ ] Mentor matching based on user criteria
-- [ ] Direct messaging between users and mentors
-- [ ] Schedule mentoring sessions with mentors
-- [ ] Payment processing for mentorship services
+- [x] User registration and verification
+- [x] Mentor registration and verification
+- [x] Mentor matching based on user criteria
+- [x] Direct messaging between users and mentors
+- [x] Implement whereby for video conferencing
+- [ ] Implement kanban for tasks
 
 ## License
 
-MentorMe is released under the MIT License. See the LICENSE file for details.
+Mentor Me is released under the MIT License. See the LICENSE file for details.
