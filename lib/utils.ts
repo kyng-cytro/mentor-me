@@ -108,14 +108,12 @@ export const dashboardItemsMentee = [
   { url: "/mentee", text: "Dashboard" },
   { url: "/tasks", text: "Tasks" },
   { url: "/mentee/mentors", text: "Mentors" },
-  { url: "/settings", text: "Settings" },
 ];
 
 export const dashboardItemsMentor = [
   { url: "/mentor", text: "Dashboard" },
   { url: "/tasks", text: "Tasks" },
   { url: "/mentor/mentees", text: "Mentees" },
-  { url: "/settings", text: "Settings" },
 ];
 
 export const weekDays: string[] = [
