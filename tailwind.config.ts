@@ -2,7 +2,6 @@
 module.exports = {
   content: [],
   darkMode: "class",
-  plugins: [require("@tailwindcss/forms"), require("tailwind-scrollbar")],
   theme: {
     extend: {
       fontFamily: {
