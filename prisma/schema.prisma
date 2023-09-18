@@ -46,6 +46,7 @@ model Mentor {
   user              User           @relation(fields: [userId], references: [id])
   userId            String
   mentees           Mentee[]
+  tasks             Task[]
   requests          Request[]
   meetings          Meeting[]
   testimonials      Testimonial[]
@@ -66,11 +67,28 @@ model Mentee {
   user             User          @relation(fields: [userId], references: [id])
   userId           String
   mentors          Mentor[]
+  tasks            Task[]
   requests         Request[]
   meetings         Meeting[]
   reviews          Testimonial[]
 
   @@map("mentees")
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  postition   Int
+  title       String
+  description String
+  mentor      Mentor     @relation(fields: [mentorId], references: [id])
+  mentee      Mentee     @relation(fields: [menteeId], references: [id])
+  mentorId    String
+  menteeId    String
+  status      TaskStatus @default(TODO)
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at")
+
+  @@map("tasks")
 }
 
 model Message {
@@ -147,6 +165,12 @@ enum RequestStatus {
   PENDING
   APPROVED
   DECLINED
+}
+
+enum TaskStatus {
+  TODO
+  DOING
+  DONE
 }
 
 enum Role {

@@ -10,13 +10,11 @@
   },
   "devDependencies": {
     "@nuxtjs/supabase": "^1.1.0",
-    "@tailwindcss/forms": "^0.5.3",
     "consola": "^3.1.0",
     "nuxt": "^3.7.0",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.4",
     "prisma": "^4.11.0",
-    "tailwind-scrollbar": "^3.0.5",
     "zod-prisma-types": "^2.5.5"
   },
   "dependencies": {
@@ -32,6 +30,7 @@
     "tsparticles-slim": "^2.12.0",
     "vue-multiselect": "^3.0.0-beta.2",
     "vue3-particles": "^2.12.0",
+    "vuedraggable": "^4.1.0",
     "zod": "^3.21.4"
   }
 }
