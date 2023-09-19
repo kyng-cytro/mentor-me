@@ -41,6 +41,7 @@ export default eventHandler(async (event) => {
           include: {
             mentee: { include: { user: true } },
           },
+          orderBy: { createdAt: "desc" },
         },
       },
     });

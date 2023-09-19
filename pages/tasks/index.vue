@@ -1,34 +1,29 @@
 <script setup lang="ts">
+import { Task } from "@prisma/client";
 import draggable from "vuedraggable";
 
 const user = useSupabaseUser();
 
-const { data } = useFetch("/api/tasks/me", {
+const { data: mentorInfo } = useFetch("/api/mentor/me", {
+  params: { id: user.value?.id },
+});
+
+const { data, refresh } = useFetch("/api/tasks/me", {
   params: {
     type: user.value?.user_metadata.mentor ? "MENTOR" : "MENTEE",
   },
 });
 
-const columns = reactive([
-  {
-    title: "Todo",
-    tasks: data.value
-      ?.filter((task) => task.status === "TODO")
-      .sort((a, b) => a.postition - b.postition),
-  },
-  {
-    title: "Doing",
-    tasks: data.value
-      ?.filter((task) => task.status === "DOING")
-      .sort((a, b) => a.postition - b.postition),
-  },
-  {
-    title: "Done",
-    tasks: data.value
-      ?.filter((task) => task.status === "DONE")
-      .sort((a, b) => a.postition - b.postition),
-  },
-]);
+const updateTask = async (newTask: Task) => {
+  const { error } = useFetch("/api/tasks/update", {
+    method: "POST",
+    body: { newTask },
+  });
+
+  if (error.value) console.log(error.value);
+
+  await refresh();
+};
 </script>
 
 <template>
@@ -36,7 +31,7 @@ const columns = reactive([
     <Card>
       <div class="py-3 hide-scroll-bar overflow-scroll flex flex-wrap gap-6">
         <div
-          v-for="column in columns"
+          v-for="column in data"
           :key="column.title"
           class="w-full lg:max-w-md space-y-4 px-3"
         >
@@ -55,14 +50,19 @@ const columns = reactive([
             group="tasks"
           >
             <template #item="{ element }">
-              <TasksCard :task="element" />
+              <TasksCard
+                @update="updateTask"
+                :task="element"
+                :mentees="mentorInfo?.mentees ?? []"
+                :view="user?.user_metadata.mentor ? 'MENTOR' : 'MENTEE'"
+              />
             </template>
           </draggable>
-
           <!-- Button -->
           <ButtonsText
             class="flex items-center justify-center border border-slate-300 dark:border-slate-600 w-full gap-2"
             :icon="true"
+            v-if="user?.user_metadata.mentor"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

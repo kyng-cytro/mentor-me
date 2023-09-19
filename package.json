@@ -14,7 +14,7 @@
     "nuxt": "^3.7.0",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.4",
-    "prisma": "^4.11.0",
+    "prisma": "^5.3.1",
     "zod-prisma-types": "^2.5.5"
   },
   "dependencies": {
@@ -22,7 +22,7 @@
     "@nuxtjs/tailwindcss": "^6.6.5",
     "@pinia-plugin-persistedstate/nuxt": "^1.1.1",
     "@pinia/nuxt": "^0.4.9",
-    "@prisma/client": "^4.11.0",
+    "@prisma/client": "^5.3.1",
     "@vuepic/vue-datepicker": "^5.1.0",
     "@vueuse/nuxt": "^9.13.0",
     "h3-zod": "^0.4.2",
