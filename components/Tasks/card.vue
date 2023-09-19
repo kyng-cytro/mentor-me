@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { Task } from "@prisma/client";
-const { task } = defineProps<{ task: Task }>();
+const { task } = defineProps<{
+  task: any;
+  view: "MENTOR" | "MENTEE";
+  mentees: any[];
+}>();
 
 const emit = defineEmits(["update"]);
 
@@ -9,7 +12,7 @@ const newTask = ref(task);
 const editing = ref(false);
 
 const update = () => {
-  emit("update", newTask);
+  emit("update", newTask.value);
   editing.value = false;
 };
 </script>
@@ -23,7 +26,7 @@ const update = () => {
         <input
           name="title"
           type="text"
-          v-model="task.title"
+          v-model="newTask.title"
           class="block rounded-lg border border-gray-300 bg-gray-100 px-2.5 py-2 text-sm text-gray-800 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-500 dark:text-slate-50 dark:placeholder-slate-200 dark:focus:border-blue-500 dark:focus:ring-blue-500"
           placeholder="Task title"
           v-if="editing"
@@ -36,7 +39,7 @@ const update = () => {
         />
       </Transition>
 
-      <ButtonsText :icon="true">
+      <ButtonsText :icon="true" v-if="view === 'MENTOR'">
         <Transition name="fade" mode="out-in">
           <svg
             key="save"
@@ -83,7 +86,7 @@ const update = () => {
         <textarea
           name="description"
           type="text"
-          v-model="task.description"
+          v-model="newTask.description"
           class="block w-full rounded-lg border border-gray-300 bg-gray-100 px-2.5 py-2 text-sm text-gray-800 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-500 dark:text-slate-50 dark:placeholder-slate-200 dark:focus:border-blue-500 dark:focus:ring-blue-500"
           placeholder="Task Description"
           rows="3"
@@ -101,12 +104,33 @@ const update = () => {
 
     <!-- Footer --->
     <div class="px-2 flex mt-4 justify-between items-center">
-      <span class="text-sm">{{ task.createdAt }}</span>
-      <p
-        class="max-w-40 text-ellipsis overflow-hidden inline-flex items-center rounded-md bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-gray-600 dark:text-blue-400"
-      >
-        {{ task.status.toLowerCase() }}
-      </p>
+      <span class="text-sm">{{
+        useDateFormat(task.createdAt, "ddd D, MMM, YYYY").value
+      }}</span>
+      <div v-if="view === 'MENTOR'">
+        <select
+          v-model="newTask.menteeId"
+          class="block rounded-lg border border-gray-300 bg-gray-100 px-2.5 py-2 text-sm text-gray-800 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-500 dark:text-slate-50 dark:placeholder-slate-200 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+          v-if="editing"
+        >
+          <option :value="mentee.userId" v-for="mentee in mentees">
+            {{ mentee.user.name }}
+          </option>
+        </select>
+        <p
+          class="max-w-40 text-ellipsis overflow-hidden inline-flex items-center rounded-md bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-gray-600 dark:text-blue-400"
+          v-else
+        >
+          {{ task.mentee.user.name }}
+        </p>
+      </div>
+      <div v-if="view === 'MENTEE'">
+        <p
+          class="max-w-40 text-ellipsis overflow-hidden inline-flex items-center rounded-md bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-gray-600 dark:text-blue-400"
+        >
+          {{ task.mentor.user.name }}
+        </p>
+      </div>
     </div>
   </div>
 </template>
