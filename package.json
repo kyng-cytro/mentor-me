@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "build": "nuxt build",
+    "start": "node .output/server/index.mjs",
+    "build": "prisma generate && nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
