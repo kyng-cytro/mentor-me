@@ -99,6 +99,7 @@ export const fieldOfExpertise: string[] = [
 ];
 
 export const landingItems = [
+  { text: "Home", url: "/" },
   { text: "Become a mentor", url: "/become-a-mentor" },
   { text: "Live sessions", url: "/live-sessions" },
   { text: "Find a mentor", url: "/find-a-mentor" },

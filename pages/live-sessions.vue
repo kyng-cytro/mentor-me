@@ -1,9 +1,14 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 definePageMeta({
   layout: "landing",
 });
 </script>
 
 <template>
-  <div>Live Session</div>
+  <div>
+    <Jomb />
+    <Features />
+    <HowItWorks />
+    <Testimonials />
+  </div>
 </template>

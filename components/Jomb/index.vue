@@ -38,7 +38,7 @@
           anyone who wants to achieve success in their personal or professional
           life.
         </p>
-        <ButtonsSlot>
+        <ButtonsSlot @click="navigateTo('/find-a-mentor')">
           Find your mentor
           <svg
             aria-hidden="true"
