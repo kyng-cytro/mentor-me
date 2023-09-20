@@ -1,13 +1,6 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { useModalStore } from "~/stores/modalStore";
-
 const isDark = useDark();
 const toggleDark = useToggle(isDark);
-
-const modalStore = useModalStore();
-
-const { data } = storeToRefs(modalStore);
 </script>
 
 <style>
@@ -169,7 +162,7 @@ const { data } = storeToRefs(modalStore);
     class="font-Nunito relative flex h-full min-h-screen flex-col bg-white text-black dark:bg-slate-800 dark:text-white md:h-screen"
   >
     <!-- Nav Bar -->
-    <NavbarsLanding @click.ctrl="toggleDark()" />
+    <NavbarsLanding :dark="isDark" @toggle-dark="toggleDark" />
 
     <!-- Main -->
     <div class="flex-1">
