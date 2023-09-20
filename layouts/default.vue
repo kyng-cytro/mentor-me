@@ -10,13 +10,13 @@ const toggleDark = useToggle(isDark);
     <NavbarsDashboard
       class="flex flex-col gap-0 md:hidden"
       :dark="isDark"
-      @toggle-dark="toggleDark()"
+      @toggle-dark="toggleDark"
       ref="target"
     />
 
     <SideBarsDashboard
       :dark="isDark"
-      @toggle-dark="toggleDark()"
+      @toggle-dark="toggleDark"
       class="hidden w-1/5 px-2 md:flex"
     />
 
