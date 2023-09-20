@@ -567,39 +567,23 @@ export const UserOrderByWithRelationAndSearchRelevanceInputSchema: z.ZodType<Pri
 export const UserWhereUniqueInputSchema: z.ZodType<Prisma.UserWhereUniqueInput> = z.union([
   z.object({
     id: z.string().cuid(),
-    email: z.string(),
-    phone: z.string()
-  }),
-  z.object({
-    id: z.string().cuid(),
-    email: z.string(),
-  }),
-  z.object({
-    id: z.string().cuid(),
-    phone: z.string(),
+    email: z.string()
   }),
   z.object({
     id: z.string().cuid(),
   }),
   z.object({
     email: z.string(),
-    phone: z.string(),
-  }),
-  z.object({
-    email: z.string(),
-  }),
-  z.object({
-    phone: z.string(),
   }),
 ])
 .and(z.object({
   id: z.string().cuid().optional(),
   email: z.string().optional(),
-  phone: z.string().optional(),
   AND: z.union([ z.lazy(() => UserWhereInputSchema),z.lazy(() => UserWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => UserWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => UserWhereInputSchema),z.lazy(() => UserWhereInputSchema).array() ]).optional(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  phone: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   active: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   profileImage: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   gender: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
