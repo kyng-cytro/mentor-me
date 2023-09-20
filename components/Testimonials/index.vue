@@ -25,7 +25,7 @@
             />
           </div>
           <div class="p-6">
-            <h4 class="mb-4 text-2xl font-semibold">Maria Smantha</h4>
+            <h4 class="mb-4 text-2xl font-semibold">Ngozi Adewale</h4>
             <hr />
             <p class="mt-4 text-gray-500 dark:text-gray-400">
               <svg
@@ -38,8 +38,8 @@
                   d="M13 14.725c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275zm-13 0c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275z"
                 />
               </svg>
-              Lorem ipsum dolor sit amet eos adipisci, consectetur adipisicing
-              elit.
+              Ngozi's mentorship is a true game-changer. She inspires and
+              empowers me, making my career dreams a reality.
             </p>
           </div>
         </div>
@@ -61,7 +61,7 @@
             />
           </div>
           <div class="p-6">
-            <h4 class="mb-4 text-2xl font-semibold">Lisa Cudrow</h4>
+            <h4 class="mb-4 text-2xl font-semibold">Olumide Adebayo</h4>
             <hr />
             <p class="mt-4 text-gray-500 dark:text-gray-400">
               <svg
@@ -74,7 +74,8 @@
                   d="M13 14.725c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275zm-13 0c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275z"
                 />
               </svg>
-              Neque cupiditate assumenda in maiores repudi mollitia architecto.
+              Olumide's transformative mentorship shapes my career path. His
+              expertise and support are my keys to success.
             </p>
           </div>
         </div>
@@ -96,7 +97,7 @@
             />
           </div>
           <div class="p-6">
-            <h4 class="mb-4 text-2xl font-semibold">John Smith</h4>
+            <h4 class="mb-4 text-2xl font-semibold">Chukwuemeka Okonkwo</h4>
             <hr />
             <p class="mt-4 text-gray-500 dark:text-gray-400">
               <svg
@@ -109,8 +110,8 @@
                   d="M13 14.725c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275zm-13 0c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275z"
                 />
               </svg>
-              Delectus impedit saepe officiis ab aliquam repellat rem unde
-              ducimus.
+              Chukwuemeka's guidance has been vital to my career journey. His
+              mentorship is my compass.
             </p>
           </div>
         </div>
