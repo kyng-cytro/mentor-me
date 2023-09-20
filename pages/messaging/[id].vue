@@ -236,7 +236,7 @@ onUnmounted(() => {
               data.guestInfo.profileImage ??
               `https://api.dicebear.com/5.x/initials/svg?seed=${data.guestInfo.name}`
             "
-            :text="`${data.userInfo.name} is  typing...`"
+            :text="`${data.guestInfo.name} is  typing...`"
             :typing="true"
             :is-user="false"
             v-if="guestTyping"
